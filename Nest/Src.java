@@ -150,7 +150,7 @@ abstract class Stmt {
         }
     }
 
-    abstract Env exec(Program prog, Env env);
+    abstract Env exec(Env env);
 
     abstract void print(int ind);
 }
@@ -163,8 +163,8 @@ class Seq extends Stmt {
         this.r = r;
     }
 
-    Env exec(Program prog, Env env) {
-        return r.exec(prog, l.exec(prog, env));
+    Env exec(Env env) {
+        return r.exec(l.exec(env));
     }
 
     void print(int ind) {
@@ -182,7 +182,7 @@ class Assign extends Stmt {
         this.rhs = rhs;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         Env.lookup(env, lhs).setValue(rhs.eval(env));
         return Env.lookup(env, lhs);
     }
@@ -207,9 +207,9 @@ class While extends Stmt {
         this.body = body;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         while (test.eval(env).asBool()) {
-            body.exec(prog, env);
+            body.exec(env);
         }
         return env;
     }
@@ -233,11 +233,11 @@ class If extends Stmt {
         this.f = f;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         if (test.eval(env).asBool()) {
-            t.exec(prog, env);
+            t.exec(env);
         } else {
-            f.exec(prog, env);
+            f.exec(env);
         }
         return env;
     }
@@ -261,7 +261,7 @@ class Print extends Stmt {
         this.exp = exp;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         System.out.println("Output: " + exp.eval(env).asInt());
         return env;
     }
@@ -332,112 +332,12 @@ class VarDecl extends Stmt {
         this.expr = expr;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         return new Env(var, expr.eval(env), env);
     }
 
     void print(int ind) {
         indent(ind);
         System.out.println("var " + var + " = " + expr.show() + ";");
-    }
-}
-
-class Program {
-    private Proc[] procs;
-    private Stmt body;
-
-    Program(Proc[] procs, Stmt body) {
-        this.procs = procs; this.body = body;
-    }
-
-    Program(Stmt body) {
-        this(new Proc[] {}, body);
-    }
-
-    void run() {
-        body.exec(this, null);
-    }
-
-    int index = 0;
-    void print() {
-        for(Proc p : procs) {
-            p.print(index);
-            index++;
-        }
-        body.print(4);
-        System.out.println();
-    }
-
-    void call(Env env, String name, Expr[] actuals) {
-        for (int i=0; i<procs.length; i++) {
-            if (name.equals(procs[i].getName())) {
-                procs[i].call(this, env, actuals);
-                return;
-            }
-        }
-        System.out.println("ABORT: Cannot find function " + name);
-        System.exit(1);
-    }
-}
-
-class Proc {
-    private String   name;
-    private String[] formals;
-    private Stmt     body;
-
-    Proc(String name, String[] formals, Stmt body) {
-        this.name = name; this.formals = formals; this.body = body;
-    }
-
-    String getName() { return name; }
-
-    void print(int ind) {
-        Stmt.indent(ind);
-        System.out.print("procedure " + name + "(");
-        for (int i=0; i<formals.length; i++) {
-            if (i>0) {
-                System.out.print(", ");
-            }
-            System.out.print(formals[i]);
-        }
-        System.out.println(") {");
-
-        body.print(ind+2);
-
-        Stmt.indent(ind);
-        System.out.println("}");
-    }
-
-    // This goes in the Proc class:
-    void call(Program prog, Env env, Expr[] actuals) {
-        if (actuals.length!=formals.length) {
-            System.out.println("ABORT: Wrong number of arguments for " + name);
-            System.exit(1);
-        }
-        Env newenv = null;
-        for (int i=0; i<actuals.length; i++) {
-            newenv = new Env(formals[i], actuals[i].eval(env), newenv);
-        }
-        body.exec(prog, newenv);
-    }
-}
-
-
-
-class Call extends Stmt {
-    private String name;
-    private Expr[] actuals;
-    Call(String name, Expr[] actuals) {
-        this.name = name; this.actuals = actuals;
-    }
-
-    Env exec(Program prog, Env env) {
-        prog.call(env, name, actuals);
-        return env;
-    }
-
-    void print(int ind) {
-        indent(ind);
-        // TODO: fill this in if you want to see calls in the output!
     }
 }
