@@ -144,15 +144,15 @@ class EqEq extends Expr {
 //        |  Print Expr
 
 abstract class Stmt {
-    abstract Env exec(Program prog, Env env);
-
-    abstract void print(int ind);
-
     static void indent(int ind) {
         for (int i = 0; i < ind; i++) {
             System.out.print(" ");
         }
     }
+
+    abstract Env exec(Env env);
+
+    abstract void print(int ind);
 }
 
 class Seq extends Stmt {
@@ -163,8 +163,8 @@ class Seq extends Stmt {
         this.r = r;
     }
 
-    Env exec(Program prog, Env env) {
-        return r.exec(prog, l.exec(prog, env));
+    Env exec(Env env) {
+        return r.exec(l.exec(env));
     }
 
     void print(int ind) {
@@ -182,12 +182,15 @@ class Assign extends Stmt {
         this.rhs = rhs;
     }
 
-    Env exec(Program prog, Env env) {
-        // Maybe this works?
-        Env.lookup(env, lhs).setValue(rhs.eval(Env.lookup(env, lhs)));
-        return env;
-        //env.store(lhs, rhs.eval(env));
+    Env exec(Env env) {
+        Env.lookup(env, lhs).setValue(rhs.eval(env));
+        return Env.lookup(env, lhs);
     }
+    /*
+    void exec(Env env) {
+        mem.store(lhs, rhs.eval(env));
+    }
+    */
 
     void print(int ind) {
         indent(ind);
@@ -204,9 +207,9 @@ class While extends Stmt {
         this.body = body;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         while (test.eval(env).asBool()) {
-            body.exec(prog, env);
+            body.exec(env);
         }
         return env;
     }
@@ -230,12 +233,13 @@ class If extends Stmt {
         this.f = f;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         if (test.eval(env).asBool()) {
-            return t.exec(prog, env);
+            t.exec(env);
         } else {
-            return f.exec(prog, env);
+            f.exec(env);
         }
+        return env;
     }
 
     void print(int ind) {
@@ -257,7 +261,7 @@ class Print extends Stmt {
         this.exp = exp;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         System.out.println("Output: " + exp.eval(env).asInt());
         return env;
     }
@@ -328,7 +332,7 @@ class VarDecl extends Stmt {
         this.expr = expr;
     }
 
-    Env exec(Program prog, Env env) {
+    Env exec(Env env) {
         return new Env(var, expr.eval(env), env);
     }
 
@@ -337,5 +341,3 @@ class VarDecl extends Stmt {
         System.out.println("var " + var + " = " + expr.show() + ";");
     }
 }
-
-

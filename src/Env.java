@@ -1,41 +1,23 @@
 class Env {
-  private String var;
-  private Value  val;
-  private Env    rest;
-
-  Env(String var, Value val, Env rest) {
-    this.var = var; this.val = val; this.rest = rest;
-  }
- 
-	Value getValue() { return val; }
- 
-	void  setValue(Value val) { this.val = val; }
- 
-	static Env lookup(Env env, String name) {
-    for (; env!=null; env=env.rest) {
-      if (name.equals(env.var)) {
-        return env;
-      }
-    }
-    System.out.println("ABORT: Variable " + name + " not defined");
-    System.exit(1);
-    return null; // not reached
-  }
-}
-
-class Program {
-    private Stmt body;
-
-    Program(Stmt body) {
-        this.body = body;
+    private String var;
+    private Value  val;
+    private Env    rest;
+    Env(String var, Value val, Env rest) {
+        this.var = var; this.val = val; this.rest = rest;
     }
 
-    void run() {
-        body.exec(this, null);
-    }
+    Value getValue() { return val; }
 
-    void print() {
-        body.print(4);
-        System.out.println();
+    void  setValue(Value val) { this.val = val; }
+
+    static Env lookup(Env env, String name) {
+        for (; env!=null; env=env.rest) {
+            if (name.equals(env.var)) {
+                return env;
+            }
+        }
+        System.out.println("ABORT: Variable " + name + " not defined");
+        System.exit(1);
+        return null; // not reached
     }
 }

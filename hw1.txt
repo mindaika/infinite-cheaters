@@ -1,0 +1,578 @@
+------------------------------------------------------------------------
+CS322 Languages and Compiler Design II                        Homework 1
+------------------------------------------------------------------------
+
+This homework is intended to give you some more practice in working
+with and extending the collection of interpreters that was developed
+during the Week 1 lecture and lab sessions.  The main focus in this
+assignment is in extending the interpretour's simple programming
+language to support programs that work with lists.
+
+This assignment is due at 11:59pm on Tuesday, April 22.  Further
+details on what materials you will need to submit and how they
+should be packaged will be provided nearer the deadline.  Although
+you will only need one version of Src.java, you should create new
+test programs for each question and should not modify the test files
+that you used for the previous questions.  Of course, you are
+welcome to use a *copy* of your earlier test files as a starting
+point, just as long as you don't overwrite and so lose access to the
+earlier test files.  You may also find it convenient to take a
+snapshot of your code at the end of each question, just as we did in
+the lab.
+
+This assignment will be graded out of 60 points following the
+distribution described below.  The minimum passing grade for this
+assignment (i.e., to avoid an F or an X grade) is 1 point.  You are
+expected to attempt all questions, but yes, this does mean that
+anything more than zero will be treated as meeting the minimum grade
+requirement.  Remember, however, that anyone who is found to have
+cheated on this assignment will receive a zero for the assignment.
+So please do not cheat, and remember to ask for help if you get
+stuck and need further help or clarification.  We are on hand to
+help on the D2L discussions, during office hours, in class, or in
+person, etc.
+
+------------------------------------------------------------------------
+Question 0: [0 points, but essential to complete]
+-----------
+Your first exercise is to make sure that you have completed *and
+understood* all of the steps in the "interpretour", as documented at:
+
+      http://web.cecs.pdx.edu/~mpj/cs322/interpretour.html
+
+While there are no points (i.e., zero points) for this question in
+the grading scheme, the workload for the current assignment reflects
+the expectation that at least some of the time you would normally spend
+on study and homework will be used up in completing the initial
+interpretour.  Nevertheless, you should not let this drag on too
+long and should ask for help if you get stuck or need clarification.
+
+The reason for asking you to finish the interpretour is that you
+will need a completed version of the interpreter, up to and
+including the FCF (first-class functions) version that is described
+in the final step, as a starting point for the remaining questions.
+Note also that you should have a good understanding of what each of
+the different extensions does, both in terms of the language
+features that it supports and the way in which it is implemented.
+Again, if you have doubts or questions about any of this, please ask
+for help.
+
+------------------------------------------------------------------------
+Question 1: [10 points]
+-----------
+The FCF interpreter includes support for working with integer values
+(represented by instances of the IValue class), Booleans (represented
+by instances of BValue), and functions (represented by FValue).  As a
+first step in adding support for lists, we need to add a corresponding
+class for representing lists.  Following the same convention as was
+used for the other Value types, we will refer to this as LValue. (Note
+of course that this has nothing to do with the traditional notion of
+"lvalues"---the kinds of expression that can appear on the left hand
+side of an assignment statement!)  In fact, there are two particular
+kinds of Lvalue that we will need to work with---empty lists and
+non-empty lists---and so we will start by adding the following three
+classes to the interpreter:
+
+    abstract class LValue extends Value {
+      // Methods common to all list values should go here
+    }
+    
+    class EmptyList extends LValue {
+      // Specifics for empty lists should go here.  But an
+      // empty list has no content, and hence there are no
+      // fields in this class.
+    }
+    
+    class NonEmptyList extends LValue {
+      private Value  head;
+      private LValue tail;
+      NonEmptyList(Value head, LValue tail) {
+        this.head = head; this.tail=tail;
+      }
+      // Specifics for non-empty lists should go here.  Note
+      // that a non-empty list includes an arbitrary Value at
+      // it's head (the first element in the list) and has a
+      // second list of values (i.e., another LValue) as it's
+      // tail.
+    }
+
+All objects of the Value class, however, require an implementation
+of the show() method for generating a printable description of the
+corresponding value.  For lists, we will use a syntax in which every
+list value is enclosed by square brackets and in which each pair of
+adjacent elements are separated by a comma and a space.  For example,
+you may use the following program to test your code:
+
+    class MainList {
+      public static void main(String[] args) {
+        LValue l0 = new EmptyList();
+        LValue l1 = new NonEmptyList(new IValue(42), l0);
+        LValue l2 = new NonEmptyList(new BValue(true), l1);
+        LValue l3 = new NonEmptyList(new FValue(null, "x", new Var("x")), l2);
+        LValue l4 = l0;
+        for (int i=10; i>0; i--) {
+          l4 = new NonEmptyList(new IValue(i), l4);
+        }
+        System.out.println(l0.show());
+        System.out.println(l1.show());
+        System.out.println(l2.show());
+        System.out.println(l3.show());
+        System.out.println(l4.show());
+      }
+    }
+
+Following the specification given above, running this program should
+produce the following output:
+
+    []
+    [42]
+    [true, 42]
+    [<function>, true, 42]
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+These particular examples reinforce the fact that we are working
+with a dynamically typed language in which a single list value can
+contain values of multiple types.
+
+Note that there are several ways to accomplish this, including some
+approaches that add other methods (in addition to just show()), some
+that use instanceof, and some that rely on static methods.  Your
+solution will be judged only on whether it produces the correct
+results, and not on the specifics (or algorithmic complexity) of the
+approach that you choose.
+
+------------------------------------------------------------------------
+Interlude:
+----------
+Before proceeding any further, you should modify the code for
+print statements so that they can be used to print any type of
+values, not just integers.  Specifically, you find the following
+line in the implementation of the exec() method of the Print
+class:
+
+    System.out.println("Output: " + exp.eval(env).asInt());
+
+and then resplace the asInt() call with show() so that the code
+reads as follows:
+
+    System.out.println("Output: " + exp.eval(env).show());
+
+Thanks to the modifications that you have just made in Question 1,
+this will now allow the interpreter to print out list values ...
+Or, at least, it would if we had any expressions in our language
+that allowed us to construct a list value.  So now let's work on
+adding some of those!
+
+------------------------------------------------------------------------
+Question 2: [15 points]
+-----------
+In the previous question, you added support for representing list
+*values*.  In this question, you will add support for representing
+*expressions* that build or manipulate lists.  This means that you
+will be adding some new classes that extend Expr rather than Value.
+
+Specifically, your task is to add support for the following:
+
+- The expression [], which should be represented by a class called
+  Nil, provides a way for programmers to construct empty lists.
+
+- Expressions of the form cons(h,t), which should be represented
+  by objects of a class called Cons.  This provides a way for
+  programmers to *cons*truct a new list value with the value of h
+  at it's head and the value of t as it's tail.
+
+- Expressions of the form nonEmpty(e), represented using a class
+  called NonEmpty.  The intention here is that evaluating an
+  expression nonEmpty(e) will return a Boolean that is true if the
+  argument e evaluates to a non-empty list, false if the argument
+  evaluates to an empty list, or triggers a run-time error message
+  (see below) if the argument does not produce a list value.
+
+- Expressions of the form head(e), represented using a class called
+  Head.  If e evaluates to a non-empty list, then head(e) will return
+  whatever value is stored at the head of that list.  In any other
+  case, however, head(e) will trigger a run-time error message.
+
+- Expressions of the form tail(e), represented using a class called
+  Tail.  This works much like head except that, if e evaluates to a
+  non-empty list, then tail(e) will return the tail of that list
+  value instead of the head.
+
+Here, for example, is a complete implementation of the Nil class,
+including implementations of the eval() and show() methods, both of
+which are required in any subclass of Expr:
+
+    class Nil extends Expr {
+      Value eval(Env env) {
+        return new EmptyList();
+      }
+    
+      String show() { return "[]"; }
+    }
+
+You should now construct corresponding implementations for each of
+the Cons, NonEmpty, Head, and Tail classes.  Note that, if the
+second argument of cons, or the argument of head, tail, or nonEmpty
+is not a list value (i.e., evaluating that argument does not produce
+an LValue), then the interpreter should abort and display the error
+message:
+
+   "ABORT: list value expected"
+
+Furthermore, if the argument in a call to either head or tail is an
+empty list, then the interpreter should abort and display the error
+message:
+
+  "ABORT: nonempty list value expected"
+
+Note, in particular, that there are two distinct run-time errors
+that can occur as the result of evaluating an expression of the
+form head(e).
+
+Of course, you should test your implementations with a range of
+example programs.  To help get you started with this, here is a
+fragment of Java that builds the abstract syntax for some code
+that initializes two variables, one to hold the value of the
+list expression cons(1,cons(2,cons(3,cons(4,[])))), and one to
+hold an empty list value:
+
+    Stmt init = new Seq(new VarDecl("l", new Cons(new Int(1),
+                                          new Cons(new Int(2),
+                                           new Cons(new Int(3),
+                                            new Cons(new Int(4),
+                                             new Nil()))))),
+                        new VarDecl("r", new Nil())); 
+
+Starting from definitions like this, we can build up the
+description of complete programs.  The following output shows
+one such example (you'll need to do some work to construct
+the abstract syntax for this by hand, although the definition
+of init above should at least get you started):
+
+    Complete program is:
+        procedure reverse(list, ref out) {
+          out = [];
+          while (nonEmpty(list)) {
+            out = cons(head(list), out);
+            list = tail(list);
+          }
+        }
+        var l = cons(1, cons(2, cons(3, cons(4, []))));
+        var r = [];
+        print l;
+        reverse(l, r);
+        print r;
+    
+    Running program:
+    Output: [1, 2, 3, 4]
+    Output: [4, 3, 2, 1]
+    Done!
+
+As the names suggest (and the output indicates), the reverse
+procedure in this program takes an input list as its first parameter
+and returns a copy of that list, with the elements in the reverse
+order, in its second parameter.  Note that we rely on
+call-by-reference here to allow the reverse procedure to return a
+result to its caller.  Of course, in a more realistic language
+design, we would probably add support for "return" statements so
+that a procedure could return a result more directly.  Changing the
+interpreter to support that, however, is beyond the scope of the
+current assignment!
+
+------------------------------------------------------------------------
+Question 3: [10 points]
+-----------
+A problem with using expressions like head(e) and tail(e) is that
+they will trigger a run-time error if the argument e evaluates to
+an empty list.  One way to avoid this behavior is to use a "case
+expression" that behaves like a special kind of if-then-else
+statement for operating on list values.  In concrete syntax, case
+expressions might look something like the following:
+
+    case expr of
+      [] ->
+        ifEmpty
+      cons(h, t) ->
+        ifNonEmpty
+
+The idea here is that, if expr evaluates to the empty list, then
+we will execute the ifEmpty statement.  On the other hand, if the
+list is non-empty, then we will evaluate the the ifNonEmpty
+statement with the variables h and t holding the values for the
+head and the tail of that non-empty list, respectively.  This
+eliminates the possibility of triggering a run-time error by
+asking for the head or tail of an empty list.  (Although it does
+not eliminate the possibility of a run-time error if expr is not a
+list value!)  In other words, the case construct above behaves
+much like the following program, which only uses head and tail in
+a context where we know that the list l is nonempty:
+
+    {
+      var l = list;        // save the value of list so that we don't
+      if (nonEmpty(l)) {   // evaluate that same expression multiple
+        var h = head(l);   // times.  (We assume that the variable l
+        var t = tail(l);   // does not appear in ifNonEmpty or ifEmpty.)
+        ifNonEmpty
+      } else {
+        ifEmpty
+      }
+    }
+
+(Note, incidentally, that this will (and should) produce a
+run-time type error if the supplied list expression does not
+actually evaluate to a list value.)
+
+Your primary task in this question is to provide an implementation
+of the case construct by completing the definition of the exec()
+method in the following abstract syntax class:
+
+    class Case extends Stmt {
+      private Expr   expr;
+      private Stmt   ifEmpty;
+      private String h;
+      private String t;
+      private Stmt   ifNonEmpty;
+      Case(Expr expr, Stmt ifEmpty, String h, String t, Stmt ifNonEmpty) {
+        this.expr       = expr;
+        this.ifEmpty    = ifEmpty;
+        this.h          = h;
+        this.t          = t;
+        this.ifNonEmpty = ifNonEmpty;
+      }
+    
+      Env exec(Program prog, Env env) {
+        // Fill this in ...
+      }
+    
+      void print(int ind) {
+        indent(ind);
+        System.out.println("case " + expr.show() + " of");
+        indent(ind+2);
+        System.out.println("[] ->");
+        ifEmpty.print(ind+4);
+        indent(ind+2);
+        System.out.println("cons(" + h + ", " + t + ") ->");
+        ifNonEmpty.print(ind+4);
+      }
+    }
+
+Again, you will need to test that your solution works correctly.
+The following output shows one such example program that uses a
+case construct in a non-trivial manner:
+
+    Complete program is:
+        procedure map(f, list, ref out) {
+          case list of
+            [] ->
+              out = [];
+            cons(h, t) ->
+              var r = (f @ h);
+              map(f, t, out);
+              out = cons(r, out);
+        }
+        var l = cons(1, cons(2, cons(3, cons(4, []))));
+        var r = [];
+        print l;
+        map((\x -> (x * 2)), l, r);
+        print r;
+        map((\x -> (x + 1)), r, l);
+        print l;
+    
+    Running program:
+    Output: [1, 2, 3, 4]
+    Output: [2, 4, 6, 8]
+    Output: [3, 5, 7, 9]
+    Done!
+
+The intuition here is that a call to map(f, inp, out) will traverse
+the input list, inp, applying the function f to each element and
+passing back the corresponding list of results in the out parameter
+(once again, this last detail is made possible by the use of
+call-by-reference parameter passing in the third argument).
+
+In the code above, we start by constructing the list [1, 2, 3, 4],
+then map the function (\x -> (x*2)), which doubles its input value,
+to generate the new list [2, 4, 6, 8].  The second call to map uses
+the function (\x -> (x+1)), which adds one to each input value, and
+hence leaves us with the final result l = [3, 5, 7, 9].
+
+Of course, you will need to do some work to construct the abstract
+syntax for the program above before you can run it.  But proceed
+with care, and don't be afraid to break it down in to small pieces
+(i.e., introduce variables, like init in Question 2, to construct
+and name small fragments of abstract syntax), and you should soon
+be able to try some tests of your own!
+
+------------------------------------------------------------------------
+Question 4: [10 points]
+-----------
+A common pattern in programs that work with lists is to have a loop
+that runs through the individual elements of a given list performing
+some action for each element.  For example, we can print out the
+elements of a list using:
+
+      for (v in list) {
+        print v;
+      }
+
+Or calculate the sum of the elements in a list using:
+
+      out = 0;
+      for (i in list) {
+        out = out + i;
+      }
+
+Or find the length of a list using:
+
+      out = 0;
+      for (i in list) {
+        out = out + 1;
+      }
+
+These three code fragments use a new "for" loop construct that is
+specifically designed for looping over the elements of a list.  Your
+goal in this question is to extend the interpreter to support this
+feature.
+
+The general form of the For loop construct is as follows:
+
+      for ( <var> in <listexpression> ) <stmt>
+
+The intention here is that the loop body (i.e., the <stmt> portion)
+will be executed once for each element in the <listexpression>,
+changing the value of the specified variable, <var>, to the value of
+the corresponding list element on each iteration.  This description
+suggests the following skeleton implementation of an abstract syntax
+class to represent for loops of this kind:
+
+    class For extends Stmt {
+      private String v;
+      private Expr list;
+      private Stmt body;
+      For(String v, Expr list, Stmt body) {
+        this.v = v; this.list = list; this.body = body;
+      }
+    
+      Env exec(Program prog, Env env) {
+        // fill me in !
+      }
+    
+      void print(int ind) {
+        indent(ind);
+        System.out.println("for (" + v + " in " + list.show() + ") {");
+        body.print(ind+2);
+        indent(ind);
+        System.out.println("}");
+      }
+    }
+
+Your first task is to complete the definition of the For class by
+filling in a suitable implementation for exec().  Be sure to test
+your implementation to make sure that it works correctly.  Note also
+that your implementation should trigger a run-time type error (with
+the same text/error message as suggested before) if the list
+expression in a for loop does not evaluate to a list value.
+
+There are several reasons why you might want to extend a programming
+language with built-in support for loops like this:
+
+- it neatly, and concisely captures a common programming pattern.
+
+- it allows us to access each of the elements of a list without ever
+  having to use the (potentially error prone) head or tail operators,
+  ensuring that each list element is visited once and only once.
+
+- it can be compiled in to a simple loop that runs in constant space
+  (i.e., without requiring extra space for a stack, as might be
+  required for functions that are defined using recursion); we'll
+  learn more about this later in the class.
+
+A reasonable concern, however, is that some operations cannot be
+defined using a "for" loop of this kind.  To complete this question,
+explain whether each of the procedures described below can be
+implemented using "for" loops (nest loops or multiple loops in
+sequence are ok) but without using any "head", "tail", or "nonEmpty"
+operation, nor any "case" constructs or recursive procedure calls.
+In each case, you should either provide an implementation of the
+operation and demonstrate that it has the intended behavior, or else
+explain as carefully as possible why no such implementation is possible.
+
+- procedure reverse(list, ref out), which returns with out holding
+  a reversed version of the list argument that was passed in as the
+  first parameter.  (In other words, this would behave much like the
+  reverse procedure in Question 2, but would be defined in a
+  different way.)
+
+- procedure map(f, list, ref out), which applies the function f to
+  each element in the given list argument and returns the list of
+  results, in the same order as the input list, via the out parameter.
+  (In other words, this would behave much like the map procedure in
+  Question 3, but would be defined in a different way.)
+
+- procedure count(val, list, ref num), which counts the number of
+  occurrences of the specified value, val, in the give list, returning
+  the result via the third parameter, num.  For example, if the variable
+  v has been defined, then a call:
+
+     count(3, cons(1,cons(2,cons(3,cons(4,[])))), v)
+
+  would set v to 1 (because the list contains one element 3), while
+
+     count(3, cons(3,cons(3,cons(3,cons(3,[])))), v)
+
+  would set v to 4 (because the input list contains four 3s).
+
+- procedure position(val, list, ref pos), which sets pos to the position
+  of the first occurrence of val in list (starting the count from 1) or
+  returning 0 if val does not occur in the list.  For example, a call:
+
+     count(3, cons(1,cons(2,cons(3,cons(4,[])))), v)
+
+  would set v to 3 (because the first 3 appears in the list at position 3)
+  while:
+
+     count(3, cons(3,cons(2,cons(3,cons(4,[])))), v)
+
+  would set v to 1 and:
+
+     count(5, cons(1,cons(2,cons(3,cons(4,[])))), v)
+
+  would set v to 0.
+
+------------------------------------------------------------------------
+Question 5: [15 points]
+-----------
+[This question asks you to speculate about an implementation effort,
+but you are not actually expected to do any of that implementation
+work.  You are not expected to work out all the details and will
+receive credit for any plausible approach that you describe.
+Insight and creativity will be rewarded!]
+
+The bytecode interpreter, B, that was discussed in Lecture 1 uses
+same source language as the interpreter that was presented in the Is
+folder of the original interpretour package.  But we have made many
+changes and extensions to the Is interpreter since then, including:
+
+  DT:   adding support for dynamic types
+  Nest: adding support for nested environments
+  Proc: adding support for procedures
+  Ref:  adding support for call-by-value
+  List: adding support for list values (this assignment)
+
+Your task in this question is to describe briefly (a short paragraph
+with a few sentences for each case) how you might modify the bytecode
+interepreter to support each of these extensions.  In each case, a
+good starting point is to consider how you might need to change the
+data structures that are used in the bytecode interpreter and how you
+might need to change/extend the bytecode instruction set that it uses.
+
+(You might notice that FCF is not included in the above list.
+This is intentional.  You are welcome, of course, to consider that
+extension too (albeit not for credit), but I don't think it would
+be fair to expect you to come up with implementation techniques
+for that particular feature at this point in the class without
+some more hints and discussion.  For those who are interested,
+however, we do expect to come back to this topic later in the
+term.)
+
+------------------------------------------------------------------------
