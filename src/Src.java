@@ -184,7 +184,7 @@ class Assign extends Stmt {
 
     Env exec(Program prog, Env env) {
         Env.lookup(env, lhs).setValue(rhs.eval(env));
-        return Env.lookup(env, lhs);
+        return env;
     }
     /*
     void exec(Env env) {
