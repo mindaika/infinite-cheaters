@@ -4,6 +4,9 @@
 //        |  Expr + Expr
 //        |  Expr - Expr
 
+import java.util.ArrayList;
+import java.util.List;
+
 abstract class Expr {
     abstract Value eval(Env env);
 
@@ -291,7 +294,7 @@ class Print extends Stmt {
     }
 
     Env exec(Program prog, Env env) {
-        System.out.println("Output: " + exp.eval(env).asInt());
+        System.out.println("Output: " + exp.eval(env).show());
         return env;
     }
 
@@ -376,6 +379,59 @@ class IValue extends Value {
     }
 }
 
+abstract class LValue extends Value {
+    // Methods common to all list values should go here
+    abstract String showNoBrackets();
+    String show() { return "[" + this.showNoBrackets() + "]"; }
+}
+
+class EmptyList extends LValue {
+    // Specifics for empty lists should go here.  But an
+    // empty list has no content, and hence there are no
+    // fields in this class.
+
+    String showNoBrackets() { return ""; }
+}
+
+class NonEmptyList extends LValue {
+    private Value  head;
+    private LValue tail;
+    NonEmptyList(Value head, LValue tail) {
+        this.head = head; this.tail=tail;
+    }
+
+    String showNoBrackets() {
+        if (tail.getClass() != EmptyList.class) {
+            return head.show() + ", " + tail.showNoBrackets();
+        } else {
+            return head.show();
+        }
+    }
+    // Specifics for non-empty lists should go here.  Note
+    // that a non-empty list includes an arbitrary Value at
+    // it's head (the first element in the list) and has a
+    // second list of values (i.e., another LValue) as its
+    // tail.
+}
+
+class MainList {
+    public static void main(String[] args) {
+        LValue l0 = new EmptyList();
+        LValue l1 = new NonEmptyList(new IValue(42), l0);
+        LValue l2 = new NonEmptyList(new BValue(true), l1);
+        LValue l3 = new NonEmptyList(new FValue(null, "x", new Var("x")), l2);
+        LValue l4 = l0;
+        for (int i=10; i>0; i--) {
+            l4 = new NonEmptyList(new IValue(i), l4);
+        }
+        System.out.println(l0.show());
+        System.out.println(l1.show());
+        System.out.println(l2.show());
+        System.out.println(l3.show());
+        System.out.println(l4.show());
+    }
+}
+
 class VarDecl extends Stmt {
     private String var;
     private Expr expr;
@@ -404,7 +460,7 @@ class Program {
     }
 
     Program(Stmt body) {
-        this(new Proc[] {}, body);
+        this(new Proc[]{}, body);
     }
 
     void run() {
@@ -475,8 +531,6 @@ class Proc {
     }
 }
 
-
-
 class Call extends Stmt {
     private String name;
     private Expr[] actuals;
@@ -492,6 +546,7 @@ class Call extends Stmt {
     void print(int ind) {
         indent(ind);
         // TODO: fill this in if you want to see calls in the output!
+        System.out.println(ind);
     }
 }
 
