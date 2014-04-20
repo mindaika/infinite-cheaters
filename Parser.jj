@@ -172,6 +172,7 @@ Expr term() : { Expr m, n; } {
 }
 
 Expr factor() : { Expr m, n; } {
+Expr factor() : { Expr m, n; } {
   n=app() ( ("*" m=app() { n = new Mult(n,m); }))*
   { return n; }
 }

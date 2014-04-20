@@ -36,7 +36,6 @@ class Cons extends Expr {
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
-
     }
 
     String show() {
@@ -329,6 +328,8 @@ class Case extends Stmt {
     }
 
     Env exec(Program prog, Env env) {
+        //
+        env.lookup(env, h);
         return env; //TODO: Don't return this
     }
 
@@ -547,10 +548,6 @@ abstract class LValue extends Value {
 }
 
 class EmptyList extends LValue {
-    // Specifics for empty lists should go here.  But an
-    // empty list has no content, and hence there are no
-    // fields in this class.
-
     String showNoBrackets() {
         return "";
     }
@@ -580,12 +577,6 @@ class NonEmptyList extends LValue {
     public LValue getTail() {
         return tail;
     }
-    // Specifics for non-empty lists should go here.  Note
-    // that a non-empty list includes an arbitrary Value at
-    // it's head (the first element in the list) and has a
-    // second list of values (i.e., another LValue) as its
-    // tail.
-
 }
 
 class MainList {
