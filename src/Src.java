@@ -19,6 +19,121 @@ abstract class Expr {
     }
 }
 
+class Nil extends Expr {
+    Value eval(Env env) {
+        return new EmptyList();
+    }
+
+    String show() { return "[]"; }
+}
+
+class Cons extends Expr {
+    private Value consList;
+
+    Cons(Expr head, Expr tail) {
+        if (tail.eval(null) instanceof LValue) {
+            consList = new NonEmptyList(head.eval(null), (LValue)tail.eval(null));
+        } else {
+            throw new RuntimeException("ABORT: list value expected");
+        }
+
+    }
+
+    String show() {
+        return consList.show();
+    }
+
+    Value eval(Env env) {
+        return consList;
+    }
+}
+
+/* Expressions of the form nonEmpty(e), represented using a class
+called NonEmpty.  The intention here is that evaluating an
+expression nonEmpty(e) will return a Boolean that is true if the
+argument e evaluates to a non-empty list, false if the argument
+evaluates to an empty list, or triggers a run-time error message
+(see below) if the argument does not produce a list value.*/
+class NonEmpty extends Expr {
+    private Value e;
+
+    NonEmpty(Value e) {
+        this.e = e;
+    }
+
+    @Override
+    Value eval(Env env) {
+        if (e instanceof LValue) {
+            return new BValue(e.getClass() != EmptyList.class);
+        } else {
+            throw new RuntimeException("ABORT: list value expected");
+        }
+    }
+
+    @Override
+    String show() {
+        return "How this work?";
+    } //TODO: This probably needs changed
+}
+
+/*Expressions of the form head(e), represented using a class called
+Head.  If e evaluates to a non-empty list, then head(e) will return
+whatever value is stored at the head of that list.  In any other
+case, however, head(e) will trigger a run-time error message.*/
+class Head extends Expr {
+    private Value e;
+
+    Head(Value e) {
+        if (e instanceof NonEmptyList) {
+            this.e = e;
+        } else if (e instanceof EmptyList) {
+            throw new RuntimeException("ABORT: nonempty list value expected");
+        } else {
+            throw new RuntimeException("ABORT: list value expected");
+        }
+    }
+
+    @Override
+    Value eval(Env env) {
+        // Sounds dirty, but is syntactically and semantically sound
+        return ((NonEmptyList) e).getHead();
+    }
+
+    @Override
+    String show() {
+        return null; //TODO: Does this need to do something?
+    }
+}
+
+/*Expressions of the form tail(e), represented using a class called
+Tail.  This works much like head except that, if e evaluates to a
+non-empty list, then tail(e) will return the tail of that list
+value instead of the head.*/
+class Tail extends Expr {
+    private Value e;
+
+    Tail(Value e) {
+        if (e instanceof NonEmptyList) {
+            this.e = e;
+        } else if (e instanceof EmptyList) {
+            throw new RuntimeException("ABORT: nonempty list value expected");
+        } else {
+                throw new RuntimeException("ABORT: list value expected");
+        }
+    }
+
+    @Override
+    Value eval(Env env) {
+        // Still dirty; still correct
+        return ((NonEmptyList) e).getTail();
+    }
+
+    @Override
+    String show() {
+        return null; //TODO: What should this be doing?
+    }
+}
+
 class Var extends Expr {
     private String name;
 
@@ -147,25 +262,37 @@ class EqEq extends Expr {
 
 class Lambda extends Expr {
     private String var;
-    private Expr   body;
-    Lambda(String var, Expr body) { this.var = var; this.body = body; }
+    private Expr body;
 
-    Value  eval(Env env) {
+    Lambda(String var, Expr body) {
+        this.var = var;
+        this.body = body;
+    }
+
+    Value eval(Env env) {
         return new FValue(env, var, body);
     }
 
-    String show() { return "(\\" + var + " -> " + body.show() + ")"; }
+    String show() {
+        return "(\\" + var + " -> " + body.show() + ")";
+    }
 }
 
 class Apply extends Expr {
     private Expr fun, arg;
-    Apply(Expr fun, Expr arg) { this.fun = fun; this.arg = arg; }
 
-    Value  eval(Env env) {
+    Apply(Expr fun, Expr arg) {
+        this.fun = fun;
+        this.arg = arg;
+    }
+
+    Value eval(Env env) {
         return fun.eval(env).enter(arg.eval(env));
     }
 
-    String show() { return "(" + fun.show() + " @ " + arg.show() + ")"; }
+    String show() {
+        return "(" + fun.show() + " @ " + arg.show() + ")";
+    }
 }
 
 //____________________________________________________________________________
@@ -187,6 +314,35 @@ abstract class Stmt {
     abstract void print(int ind);
 }
 
+class Case extends Stmt {
+    private Expr   expr;
+    private Stmt   ifEmpty;
+    private String h;
+    private String t;
+    private Stmt   ifNonEmpty;
+    Case(Expr expr, Stmt ifEmpty, String h, String t, Stmt ifNonEmpty) {
+        this.expr       = expr;
+        this.ifEmpty    = ifEmpty;
+        this.h          = h;
+        this.t          = t;
+        this.ifNonEmpty = ifNonEmpty;
+    }
+
+    Env exec(Program prog, Env env) {
+        return env; //TODO: Don't return this
+    }
+
+    void print(int ind) {
+        indent(ind);
+        System.out.println("case " + expr.show() + " of");
+        indent(ind+2);
+        System.out.println("[] ->");
+        ifEmpty.print(ind+4);
+        indent(ind+2);
+        System.out.println("cons(" + h + ", " + t + ") ->");
+        ifNonEmpty.print(ind+4);
+    }
+}
 class Seq extends Stmt {
     private Stmt l, r;
 
@@ -330,12 +486,14 @@ abstract class Value {
 }
 
 class FValue extends Value {
-    private Env    env;
+    private Env env;
     private String arg;
-    private Expr   body;
+    private Expr body;
 
     FValue(Env env, String arg, Expr body) {
-        this.env = env; this.arg = arg; this.body = body;
+        this.env = env;
+        this.arg = arg;
+        this.body = body;
     }
 
     Value enter(Value val) {
@@ -382,7 +540,10 @@ class IValue extends Value {
 abstract class LValue extends Value {
     // Methods common to all list values should go here
     abstract String showNoBrackets();
-    String show() { return "[" + this.showNoBrackets() + "]"; }
+
+    String show() {
+        return "[" + this.showNoBrackets() + "]";
+    }
 }
 
 class EmptyList extends LValue {
@@ -390,14 +551,18 @@ class EmptyList extends LValue {
     // empty list has no content, and hence there are no
     // fields in this class.
 
-    String showNoBrackets() { return ""; }
+    String showNoBrackets() {
+        return "";
+    }
 }
 
 class NonEmptyList extends LValue {
-    private Value  head;
+    private Value head;
     private LValue tail;
+
     NonEmptyList(Value head, LValue tail) {
-        this.head = head; this.tail=tail;
+        this.head = head;
+        this.tail = tail;
     }
 
     String showNoBrackets() {
@@ -407,11 +572,20 @@ class NonEmptyList extends LValue {
             return head.show();
         }
     }
+
+    public Value getHead() {
+        return head;
+    }
+
+    public LValue getTail() {
+        return tail;
+    }
     // Specifics for non-empty lists should go here.  Note
     // that a non-empty list includes an arbitrary Value at
     // it's head (the first element in the list) and has a
     // second list of values (i.e., another LValue) as its
     // tail.
+
 }
 
 class MainList {
@@ -421,7 +595,7 @@ class MainList {
         LValue l2 = new NonEmptyList(new BValue(true), l1);
         LValue l3 = new NonEmptyList(new FValue(null, "x", new Var("x")), l2);
         LValue l4 = l0;
-        for (int i=10; i>0; i--) {
+        for (int i = 10; i > 0; i--) {
             l4 = new NonEmptyList(new IValue(i), l4);
         }
         System.out.println(l0.show());
@@ -429,6 +603,23 @@ class MainList {
         System.out.println(l2.show());
         System.out.println(l3.show());
         System.out.println(l4.show());
+
+        Object el5 = new Head(l1);
+        Object el6 = new Tail(l1);
+//        Object el7 = new Cons(new Int(42), l1);
+        Object el8 = new NonEmpty(l0);
+
+        System.out.println((new Int(4)).getClass());
+        System.out.println((new Nil()).getClass());
+        Cons t1 = new Cons(new Int(4), new Nil());
+
+        Stmt init = new Seq(new VarDecl("l", new Cons(new Int(1),
+                new Cons(new Int(2),
+                        new Cons(new Int(3),
+                                new Cons(new Int(4), new Nil()))))),
+                new VarDecl("r", new Nil()));
+
+        
     }
 }
 
@@ -452,11 +643,13 @@ class VarDecl extends Stmt {
 }
 
 class Program {
+    int index = 0;
     private Proc[] procs;
     private Stmt body;
 
     Program(Proc[] procs, Stmt body) {
-        this.procs = procs; this.body = body;
+        this.procs = procs;
+        this.body = body;
     }
 
     Program(Stmt body) {
@@ -467,9 +660,8 @@ class Program {
         body.exec(this, null);
     }
 
-    int index = 0;
     void print() {
-        for(Proc p : procs) {
+        for (Proc p : procs) {
             p.print(index);
             index++;
         }
@@ -478,7 +670,7 @@ class Program {
     }
 
     void call(Env env, String name, Expr[] actuals) {
-        for (int i=0; i<procs.length; i++) {
+        for (int i = 0; i < procs.length; i++) {
             if (name.equals(procs[i].getName())) {
                 procs[i].call(this, env, actuals);
                 return;
@@ -490,28 +682,32 @@ class Program {
 }
 
 class Proc {
-    private String   name;
+    private String name;
     private Formal[] formals;
-    private Stmt     body;
+    private Stmt body;
 
     Proc(String name, Formal[] formals, Stmt body) {
-        this.name = name; this.formals = formals; this.body = body;
+        this.name = name;
+        this.formals = formals;
+        this.body = body;
     }
 
-    String getName() { return name; }
+    String getName() {
+        return name;
+    }
 
     void print(int ind) {
         Stmt.indent(ind);
         System.out.print("procedure " + name + "(");
-        for (int i=0; i<formals.length; i++) {
-            if (i>0) {
+        for (int i = 0; i < formals.length; i++) {
+            if (i > 0) {
                 System.out.print(", ");
             }
             System.out.print(formals[i]);
         }
         System.out.println(") {");
 
-        body.print(ind+2);
+        body.print(ind + 2);
 
         Stmt.indent(ind);
         System.out.println("}");
@@ -519,12 +715,12 @@ class Proc {
 
     // This goes in the Proc class:
     void call(Program prog, Env env, Expr[] actuals) {
-        if (actuals.length!=formals.length) {
+        if (actuals.length != formals.length) {
             System.out.println("ABORT: Wrong number of arguments for " + name);
             System.exit(1);
         }
         Env newenv = null;
-        for (int i=0; i<actuals.length; i++) {
+        for (int i = 0; i < actuals.length; i++) {
             newenv = formals[i].extend(env, actuals[i], newenv);
         }
         body.exec(prog, newenv);
@@ -534,8 +730,10 @@ class Proc {
 class Call extends Stmt {
     private String name;
     private Expr[] actuals;
+
     Call(String name, Expr[] actuals) {
-        this.name = name; this.actuals = actuals;
+        this.name = name;
+        this.actuals = actuals;
     }
 
     Env exec(Program prog, Env env) {
@@ -567,7 +765,9 @@ class Formal {
 }
 
 class ByRef extends Formal {
-    ByRef(String name) { super(name); }
+    ByRef(String name) {
+        super(name);
+    }
 
     public String toString() {
         return "ref " + name;
