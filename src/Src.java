@@ -35,6 +35,26 @@ class Cons extends Expr {
     private NonEmptyList consList;
 
     Cons(Expr head, Expr tail) {
+//        System.out.println(head.eval(null));
+//        System.out.println(tail.eval(null));
+//        System.out.println(head.getClass());
+//        System.out.println(tail.getClass());
+        this.consHead = head;
+        this.consTail = tail;
+        if (tail.eval(null) instanceof EmptyList) {
+            consTail = tail;
+            int x = 0;
+        }
+
+        /*
+        if (!(tail.eval(null) instanceof LValue)) {
+            this.consHead = head;
+            this.consTail = tail;
+        } else {
+            throw new RuntimeException("ABORT: list value expected");
+        }*/
+
+/*
         if (tail.eval(null) instanceof NonEmptyList) {
             consHead = head;
             consTail =  new Cons(consHead, consTail);
@@ -47,10 +67,13 @@ class Cons extends Expr {
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
+*/
     }
 
     String show() {
-        return consHead.show();
+        if (consTail.eval(null) instanceof EmptyList)
+            return consHead.show();
+        return consHead.show() + ", " + consTail.show();
     } //TODO: Fix
 
     Value eval(Env env) {
@@ -105,7 +128,7 @@ class Head extends Expr {
 
     @Override
     Value eval(Env env) {
-        return ((NonEmptyList) e).getHead();
+        return e;
     }
 
     @Override
@@ -123,7 +146,7 @@ class Tail extends Expr {
 
     Tail(Value e) {
         if (e instanceof NonEmptyList) {
-            this.e = e;
+            this.e = ((NonEmptyList) e).getTail();
         } else if (e instanceof EmptyList) {
             throw new RuntimeException("ABORT: nonempty list value expected");
         } else {
@@ -626,11 +649,10 @@ class MainList {
 
         Head el5 = new Head(l4);
         Tail el6 = new Tail(l4);
-//        Cons el7 = new Cons(el5, el6);
-//        NonEmpty el8 = new NonEmpty(l0);
+        Cons el7 = new Cons(new Int(15), new Nil());
+        NonEmpty el8 = new NonEmpty(l0);
 
-        System.out.println((new Int(4)).getClass());
-        System.out.println((new Nil()).getClass());
+
         Cons t1 = new Cons(new Int(3), new Cons(new Int(4), new Nil()));
 
         Stmt init = new Seq(new VarDecl("l", new Cons(new Int(1),
@@ -643,13 +665,13 @@ class MainList {
         );
         init.print(0);
 
-
         System.out.println("el5: " + el5.show());
         System.out.println("el6: " + el6.show());
-//        System.out.println("el7: " + el7.show());
-//        System.out.println("el8: " + el8.show());
-
-
+        System.out.println("el7: " + el7.show());
+        System.out.println("el8: " + el8.show());
+        System.out.println("t1: " + t1.show());
+        System.out.println("Head test: " + el5.show());
+        System.out.println("Tail test: " + el6.show());
     }
 }
 
