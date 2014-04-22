@@ -71,8 +71,8 @@ class NonEmpty extends Expr {
 
     @Override
     String show() {
-        return "How this work?";
-    } //TODO: This probably needs changed
+        return e.show();
+    }
 }
 
 /*Expressions of the form head(e), represented using a class called
@@ -84,7 +84,7 @@ class Head extends Expr {
 
     Head(Value e) {
         if (e instanceof NonEmptyList) {
-            this.e = e;
+            this.e = ((NonEmptyList) e).getHead();
         } else if (e instanceof EmptyList) {
             throw new RuntimeException("ABORT: nonempty list value expected");
         } else {
@@ -94,13 +94,12 @@ class Head extends Expr {
 
     @Override
     Value eval(Env env) {
-        // Sounds dirty, but is syntactically and semantically sound
         return ((NonEmptyList) e).getHead();
     }
 
     @Override
     String show() {
-        return null; //TODO: Does this need to do something?
+        return e.show();
     }
 }
 
@@ -123,13 +122,12 @@ class Tail extends Expr {
 
     @Override
     Value eval(Env env) {
-        // Still dirty; still correct
         return ((NonEmptyList) e).getTail();
     }
 
     @Override
     String show() {
-        return null; //TODO: What should this be doing?
+        return e.show();
     }
 }
 
@@ -146,6 +144,11 @@ class Var extends Expr {
 
     String show() {
         return name;
+    }
+
+    Env evalRef(Env env) {
+        // Return a reference to this variable:
+        return Env.lookup(env, name);
     }
 }
 
@@ -329,8 +332,21 @@ class Case extends Stmt {
 
     Env exec(Program prog, Env env) {
         //
-        env.lookup(env, h);
-        return env; //TODO: Don't return this
+        // What should this do in real terms? Case.exec should take in a program and an environment
+        // It then needs to... use the String h to determine if the associated Expr "h" is an empty
+        // list. If so: execute ifEmpty, if not, execute ifNotEmpty. Once the appropriate Stmt has returned,
+        // it should return the calling environment.
+        if (this.expr.eval(env).getClass() == EmptyList.class) {
+
+            ifEmpty.exec(prog, env);
+        } else if (this.expr.eval(env).getClass() == NonEmptyList.class) {
+            this.h = new Head(expr.eval(env)).show();
+            this.t = new Tail(expr.eval(env)).show();
+            ifNonEmpty.exec(prog, env);
+        } else {
+            throw new RuntimeException("DANGER WILL ROBINSON! DANGER!");
+        }
+        return env; // Is this right?
     }
 
     void print(int ind) {
@@ -595,10 +611,10 @@ class MainList {
         System.out.println(l3.show());
         System.out.println(l4.show());
 
-        Object el5 = new Head(l1);
-        Object el6 = new Tail(l1);
-//        Object el7 = new Cons(new Int(42), l1);
-        Object el8 = new NonEmpty(l0);
+        Head el5 = new Head(l4);
+        Tail el6 = new Tail(l4);
+//        Cons el7 = new Cons(el5, el6);
+//        NonEmpty el8 = new NonEmpty(l0);
 
         System.out.println((new Int(4)).getClass());
         System.out.println((new Nil()).getClass());
@@ -609,6 +625,15 @@ class MainList {
                         new Cons(new Int(3),
                                 new Cons(new Int(4), new Nil()))))),
                 new VarDecl("r", new Nil()));
+        init.print(0);
+
+
+        System.out.println("el5: " + el5.show());
+        System.out.println("el6: " + el6.show());
+//        System.out.println("el7: " + el7.show());
+//        System.out.println("el8: " + el8.show());
+
+
 
         
     }
@@ -735,7 +760,17 @@ class Call extends Stmt {
     void print(int ind) {
         indent(ind);
         // TODO: fill this in if you want to see calls in the output!
-        System.out.println(ind);
+        System.out.print(name + "(");
+        int i = 0; // So lazy
+        for (Expr x : actuals) {
+            System.out.print(x.show());
+            i++;
+            if (actuals.length != i) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println(");");
+        //System.out.println(ind);
     }
 }
 
@@ -751,7 +786,7 @@ class Formal {
     }
 
     Env extend(Env env, Expr expr, Env newenv) {
-        return new RefEnv(name, expr.evalRef(env), newenv);
+        return new ValEnv(name, expr.eval(env), newenv);
     }
 }
 
@@ -762,5 +797,9 @@ class ByRef extends Formal {
 
     public String toString() {
         return "ref " + name;
+    }
+
+    Env extend(Env env, Expr expr, Env newenv) {
+        return new RefEnv(name, expr.evalRef(env), newenv);
     }
 }

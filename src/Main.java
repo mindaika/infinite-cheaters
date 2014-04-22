@@ -12,6 +12,15 @@ class Main {
                 new Seq(new VarDecl("c", new Int(20)),
                         new Print(new Var("b"))));
 
+        Stmt init = new Seq(new VarDecl("l", new Cons(new Int(1),
+                new Cons(new Int(2),
+                        new Cons(new Int(3),
+                                new Cons(new Int(4),
+                                        new Nil()))))),
+                new VarDecl("r", new Nil()));
+
+
+
 
         Program prog = new Program(s);
         Program progRock = new Program(k);
@@ -25,16 +34,5 @@ class Main {
         progRock.run();
 
         System.out.println("Done!");
-
-        /*
-        System.out.println("Complete program is:");
-        s.print(4);
-
-        System.out.println("Running on an empty memory:");
-        //Memory mem = new Memory();
-        s.exec(prog, null);
-
-        System.out.println("Done!");
-        */
     }
 }
