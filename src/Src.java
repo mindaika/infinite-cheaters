@@ -24,7 +24,9 @@ class Nil extends Expr {
         return new EmptyList();
     }
 
-    String show() { return "[]"; }
+    String show() {
+        return "[]";
+    }
 }
 
 class Cons extends Expr {
@@ -32,7 +34,7 @@ class Cons extends Expr {
 
     Cons(Expr head, Expr tail) {
         if (tail.eval(null) instanceof LValue) {
-            consList = new NonEmptyList(head.eval(null), (LValue)tail.eval(null));
+            consList = new NonEmptyList(head.eval(null), (LValue) tail.eval(null));
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
@@ -116,7 +118,7 @@ class Tail extends Expr {
         } else if (e instanceof EmptyList) {
             throw new RuntimeException("ABORT: nonempty list value expected");
         } else {
-                throw new RuntimeException("ABORT: list value expected");
+            throw new RuntimeException("ABORT: list value expected");
         }
     }
 
@@ -317,16 +319,17 @@ abstract class Stmt {
 }
 
 class Case extends Stmt {
-    private Expr   expr;
-    private Stmt   ifEmpty;
+    private Expr expr;
+    private Stmt ifEmpty;
     private String h;
     private String t;
-    private Stmt   ifNonEmpty;
+    private Stmt ifNonEmpty;
+
     Case(Expr expr, Stmt ifEmpty, String h, String t, Stmt ifNonEmpty) {
-        this.expr       = expr;
-        this.ifEmpty    = ifEmpty;
-        this.h          = h;
-        this.t          = t;
+        this.expr = expr;
+        this.ifEmpty = ifEmpty;
+        this.h = h;
+        this.t = t;
         this.ifNonEmpty = ifNonEmpty;
     }
 
@@ -352,14 +355,15 @@ class Case extends Stmt {
     void print(int ind) {
         indent(ind);
         System.out.println("case " + expr.show() + " of");
-        indent(ind+2);
+        indent(ind + 2);
         System.out.println("[] ->");
-        ifEmpty.print(ind+4);
-        indent(ind+2);
+        ifEmpty.print(ind + 4);
+        indent(ind + 2);
         System.out.println("cons(" + h + ", " + t + ") ->");
-        ifNonEmpty.print(ind+4);
+        ifNonEmpty.print(ind + 4);
     }
 }
+
 class Seq extends Stmt {
     private Stmt l, r;
 
@@ -623,8 +627,11 @@ class MainList {
         Stmt init = new Seq(new VarDecl("l", new Cons(new Int(1),
                 new Cons(new Int(2),
                         new Cons(new Int(3),
-                                new Cons(new Int(4), new Nil()))))),
-                new VarDecl("r", new Nil()));
+                                new Cons(new Int(4), new Nil()))
+                )
+        )),
+                new VarDecl("r", new Nil())
+        );
         init.print(0);
 
 
@@ -634,8 +641,6 @@ class MainList {
 //        System.out.println("el8: " + el8.show());
 
 
-
-        
     }
 }
 
@@ -740,6 +745,48 @@ class Proc {
             newenv = formals[i].extend(env, actuals[i], newenv);
         }
         body.exec(prog, newenv);
+    }
+}
+
+class For extends Stmt {
+    private String v;
+    private Expr list;
+    private Stmt body;
+
+    For(String v, Expr list, Stmt body) {
+        this.v = v;
+        this.list = list;
+        this.body = body;
+    }
+
+//    Your first task is to complete the definition of the For class by
+//    filling in a suitable implementation for exec().  Be sure to test
+//    your implementation to make sure that it works correctly.  Note also
+//    that your implementation should trigger a run-time type error (with
+//    the same text/error message as suggested before) if the list
+//    expression in a for loop does not evaluate to a list value.
+    Env exec(Program prog, Env env) {
+        if (list.eval(null).getClass() == LValue.class) {
+            //
+            ((NonEmptyList)list.eval(null)).getHead();
+            Expr k = ((NonEmptyList)list.eval(null)).getHead();
+            while (k.getClass() != EmptyList.class) {
+                v = list.eval(env).show();
+                body.exec(prog, env);
+
+            }
+        } else {
+            throw new RuntimeException("ABORT: Wrong...thing.");
+        }
+        return env;
+    }
+
+    void print(int ind) {
+        indent(ind);
+        System.out.println("for (" + v + " in " + list.show() + ") {");
+        body.print(ind + 2);
+        indent(ind);
+        System.out.println("}");
     }
 }
 
