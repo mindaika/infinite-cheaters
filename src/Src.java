@@ -30,23 +30,32 @@ class Nil extends Expr {
 }
 
 class Cons extends Expr {
-    private Value consList;
+    private Expr consHead;
+    private Expr consTail;
+    private NonEmptyList consList;
 
     Cons(Expr head, Expr tail) {
-        if (tail.eval(null) instanceof LValue) {
-            consList = new NonEmptyList(head.eval(null), (LValue) tail.eval(null));
+        if (tail.eval(null) instanceof NonEmptyList) {
+            consHead = head;
+            consTail =  new Cons(consHead, consTail);
+            //consList = new NonEmptyList(head.eval(null), (LValue) tail.eval(null));
+            // Basically, we need to create a new list from the head, and whole list minus the head,
+            // recursively
+        } else  if (tail.eval(null) instanceof EmptyList) {
+            consHead = head;
+            consList = new NonEmptyList(consHead.eval(null), new EmptyList());
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
     }
 
     String show() {
-        return consList.show();
-    }
+        return consHead.show();
+    } //TODO: Fix
 
     Value eval(Env env) {
         return consList;
-    }
+    }//TODO: Fix
 }
 
 /* Expressions of the form nonEmpty(e), represented using a class
@@ -622,7 +631,7 @@ class MainList {
 
         System.out.println((new Int(4)).getClass());
         System.out.println((new Nil()).getClass());
-        Cons t1 = new Cons(new Int(4), new Nil());
+        Cons t1 = new Cons(new Int(3), new Cons(new Int(4), new Nil()));
 
         Stmt init = new Seq(new VarDecl("l", new Cons(new Int(1),
                 new Cons(new Int(2),
@@ -664,7 +673,6 @@ class VarDecl extends Stmt {
 }
 
 class Program {
-    int index = 0;
     private Proc[] procs;
     private Stmt body;
 
@@ -683,8 +691,7 @@ class Program {
 
     void print() {
         for (Proc p : procs) {
-            p.print(index);
-            index++;
+            p.print(4);
         }
         body.print(4);
         System.out.println();
@@ -767,14 +774,11 @@ class For extends Stmt {
 //    expression in a for loop does not evaluate to a list value.
     Env exec(Program prog, Env env) {
         if (list.eval(null).getClass() == LValue.class) {
-            //
             ((NonEmptyList)list.eval(null)).getHead();
-            Expr k = ((NonEmptyList)list.eval(null)).getHead();
-            while (k.getClass() != EmptyList.class) {
-                v = list.eval(env).show();
-                body.exec(prog, env);
-
-            }
+//            while ( false ) {
+//                v = list.eval(env).show();
+//                body.exec(prog, env);
+//            }
         } else {
             throw new RuntimeException("ABORT: Wrong...thing.");
         }
