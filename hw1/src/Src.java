@@ -4,9 +4,6 @@
 //        |  Expr + Expr
 //        |  Expr - Expr
 
-import java.util.ArrayList;
-import java.util.List;
-
 abstract class Expr {
     abstract Value eval(Env env);
 
@@ -30,44 +27,11 @@ class Nil extends Expr {
 }
 
 class Cons extends Expr {
-    private Expr consHead;
-    private Expr consTail;
-    private NonEmptyList consList;
+    private Expr consHead, consTail;
 
     Cons(Expr head, Expr tail) {
-//        System.out.println(head.eval(null));
-//        System.out.println(tail.eval(null));
-//        System.out.println(head.getClass());
-//        System.out.println(tail.getClass());
         this.consHead = head;
         this.consTail = tail;
-        if (tail.eval(null) instanceof EmptyList) {
-            consTail = tail;
-            int x = 0;
-        }
-
-        /*
-        if (!(tail.eval(null) instanceof LValue)) {
-            this.consHead = head;
-            this.consTail = tail;
-        } else {
-            throw new RuntimeException("ABORT: list value expected");
-        }*/
-
-/*
-        if (tail.eval(null) instanceof NonEmptyList) {
-            consHead = head;
-            consTail =  new Cons(consHead, consTail);
-            //consList = new NonEmptyList(head.eval(null), (LValue) tail.eval(null));
-            // Basically, we need to create a new list from the head, and whole list minus the head,
-            // recursively
-        } else  if (tail.eval(null) instanceof EmptyList) {
-            consHead = head;
-            consList = new NonEmptyList(consHead.eval(null), new EmptyList());
-        } else {
-            throw new RuntimeException("ABORT: list value expected");
-        }
-*/
     }
 
     String show() {
@@ -77,7 +41,12 @@ class Cons extends Expr {
     } //TODO: Fix
 
     Value eval(Env env) {
-        return consList;
+        Value temp = consTail.eval(env);
+        if (temp instanceof LValue) {
+            return new NonEmptyList(consHead.eval(env), (LValue) consTail.eval(env));
+        } else {
+            throw new RuntimeException("ABORT: list value expected");
+        }
     }//TODO: Fix
 }
 
@@ -88,22 +57,20 @@ argument e evaluates to a non-empty list, false if the argument
 evaluates to an empty list, or triggers a run-time error message
 (see below) if the argument does not produce a list value.*/
 class NonEmpty extends Expr {
-    private Value e;
+    private Expr e;
 
-    NonEmpty(Value e) {
+    NonEmpty(Expr e) {
         this.e = e;
     }
 
-    @Override
     Value eval(Env env) {
-        if (e instanceof LValue) {
-            return new BValue(e.getClass() != EmptyList.class);
+        if (e.eval(env) instanceof LValue) {
+            return new BValue(e.eval(env) instanceof EmptyList);
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
     }
 
-    @Override
     String show() {
         return e.show();
     }
@@ -114,24 +81,23 @@ Head.  If e evaluates to a non-empty list, then head(e) will return
 whatever value is stored at the head of that list.  In any other
 case, however, head(e) will trigger a run-time error message.*/
 class Head extends Expr {
-    private Value e;
+    private Expr e;
 
-    Head(Value e) {
-        if (e instanceof NonEmptyList) {
-            this.e = ((NonEmptyList) e).getHead();
-        } else if (e instanceof EmptyList) {
+    Head(Expr e) {
+        this.e = e;
+    }
+
+    Value eval(Env env) {
+        Value temp = e.eval(env);
+        if (temp instanceof NonEmptyList) {
+            return ((NonEmptyList) temp).getHead();
+        } else if (temp instanceof EmptyList) {
             throw new RuntimeException("ABORT: nonempty list value expected");
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
     }
 
-    @Override
-    Value eval(Env env) {
-        return e;
-    }
-
-    @Override
     String show() {
         return e.show();
     }
@@ -142,24 +108,23 @@ Tail.  This works much like head except that, if e evaluates to a
 non-empty list, then tail(e) will return the tail of that list
 value instead of the head.*/
 class Tail extends Expr {
-    private Value e;
+    private Expr e;
 
-    Tail(Value e) {
-        if (e instanceof NonEmptyList) {
-            this.e = ((NonEmptyList) e).getTail();
-        } else if (e instanceof EmptyList) {
+    Tail(Expr e) {
+        this.e = e;
+    }
+
+    Value eval(Env env) {
+        Value temp = e.eval(env);
+        if (temp instanceof NonEmptyList) {
+            return ((NonEmptyList) temp).getTail();
+        } else if (temp instanceof EmptyList) {
             throw new RuntimeException("ABORT: nonempty list value expected");
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
     }
 
-    @Override
-    Value eval(Env env) {
-        return ((NonEmptyList) e).getTail();
-    }
-
-    @Override
     String show() {
         return e.show();
     }
@@ -375,8 +340,8 @@ class Case extends Stmt {
 
             ifEmpty.exec(prog, env);
         } else if (this.expr.eval(env).getClass() == NonEmptyList.class) {
-            this.h = new Head(expr.eval(env)).show();
-            this.t = new Tail(expr.eval(env)).show();
+            this.h = new Head(expr).show();
+            this.t = new Tail(expr).show();
             ifNonEmpty.exec(prog, env);
         } else {
             throw new RuntimeException("DANGER WILL ROBINSON! DANGER!");
@@ -643,17 +608,17 @@ class MainList {
         }
         System.out.println(l0.show());
         System.out.println(l1.show());
-        System.out.println(l2.show());
         System.out.println(l3.show());
         System.out.println(l4.show());
 
-        Head el5 = new Head(l4);
-        Tail el6 = new Tail(l4);
+        Head el5 = new Head(new Cons(new Int(3), new Cons(new Int(4), new Nil())));
+        Tail el6 = new Tail(new Cons(new Int(3), new Cons(new Int(4), new Nil())));
         Cons el7 = new Cons(new Int(15), new Nil());
-        NonEmpty el8 = new NonEmpty(l0);
+        NonEmpty el8 = new NonEmpty(new Cons(new Head(new Cons(new Int(3), new Cons(new Int(4), new Nil()))), new Nil()));
 
 
         Cons t1 = new Cons(new Int(3), new Cons(new Int(4), new Nil()));
+        Head h1 = new Head(new Cons(new Int(3), new Cons(new Int(4), new Nil())));
 
         Stmt init = new Seq(new VarDecl("l", new Cons(new Int(1),
                 new Cons(new Int(2),
@@ -662,6 +627,8 @@ class MainList {
                 )
         )),
                 new VarDecl("r", new Nil())
+
+
         );
         init.print(0);
 
@@ -670,8 +637,18 @@ class MainList {
         System.out.println("el7: " + el7.show());
         System.out.println("el8: " + el8.show());
         System.out.println("t1: " + t1.show());
-        System.out.println("Head test: " + el5.show());
+        System.out.println("Head test: " + h1.show());
         System.out.println("Tail test: " + el6.show());
+
+        Program prog = new Program(init);
+
+        System.out.println("Complete program is:");
+        prog.print();
+
+        System.out.println("Running in an empty environment:");
+        prog.run();
+
+        System.out.println("Done!");
     }
 }
 
@@ -795,16 +772,12 @@ class For extends Stmt {
 //    the same text/error message as suggested before) if the list
 //    expression in a for loop does not evaluate to a list value.
     Env exec(Program prog, Env env) {
-        if (list.eval(null).getClass() == LValue.class) {
-            ((NonEmptyList)list.eval(null)).getHead();
-//            while ( false ) {
-//                v = list.eval(env).show();
-//                body.exec(prog, env);
-//            }
+        Value temp = list.eval(env);
+        if (temp instanceof LValue) {
+            return env;
         } else {
             throw new RuntimeException("ABORT: Wrong...thing.");
         }
-        return env;
     }
 
     void print(int ind) {
@@ -832,7 +805,6 @@ class Call extends Stmt {
 
     void print(int ind) {
         indent(ind);
-        // TODO: fill this in if you want to see calls in the output!
         System.out.print(name + "(");
         int i = 0; // So lazy
         for (Expr x : actuals) {
