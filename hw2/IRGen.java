@@ -356,13 +356,14 @@ public class IRGen {
         List<String> varps = new ArrayList<String>();
         IR.LabelDec begin = new IR.LabelDec("Begin");
         IR.LabelDec end = new IR.LabelDec("End");
+
         instList.add(begin);
-        IR.Global glbllbl;
 
         // (Skip these two steps if method is "main".)
         if (!cinfo.isMainClass) {
             // 1. Construct a global label of form "<base class name>_<method name>"
-            glbllbl = new IR.Global(cinfo.name + "_" + n.nm);
+            IR.Global glbllbl = new IR.Global(cinfo.name + "_" + n.nm);
+//            instList.add(glbllbl); // TODO: This not work.
 
             // 2. Add "obj" into the params list as the 0th item
             n.params[0] = new Ast.Param(n.t, n.nm);
@@ -383,9 +384,11 @@ public class IRGen {
         // 4. Generate IR code for all statements
         for (Ast.Stmt s : n.stmts) {
             instList.addAll(gen(s, cinfo, newEnv));
-//            instList.add(glbllbl.toString());
         }
         // 5. Return an IR.Func with the above
+        if (cinfo.methodType(n.nm) == null) {
+            instList.add(new IR.Return());
+        }
         instList.add(end);
 
         return new IR.Func(n.nm, paramps, varps, instList);
@@ -405,7 +408,7 @@ public class IRGen {
         if (n.init != null) {
             IR.Id id = new IR.Id(n.nm);
             CodePack p = gen(n.init, cinfo, env);
-            IR.Move move = new IR.Move((IR.Dest) id, p.src);
+            IR.Move move = new IR.Move(id, p.src);
             code.addAll(p.code);
             code.add(move);
         }
@@ -438,29 +441,35 @@ public class IRGen {
         for (Ast.Stmt s : n.stmts) {
             code.addAll(gen(s, cinfo, env));
         }
-        //    TODO: Generate code for HW2
         return code;
-
-
-    }
+    }//    TODO: Check
 
     // Assign ---
     // Exp lhs, rhs;
     //
-    // Codegen Guideline:
-    // 1. call gen() on rhs
-    // 2. if lhs is ID, check against Env to see if it's a local var or a param;
-    //    if yes, generate an IR.Move instruction
-    // 3. otherwise, call genAddr() on lhs, and generate an IR.Store instruction
     //
     static List<IR.Inst> gen(Ast.Assign n, ClassInfo cinfo, Env env) throws Exception {
         List<IR.Inst> code = new ArrayList<IR.Inst>();
 
+        // 1. call gen() on rhs
+        CodePack p = gen(n.rhs, cinfo, env);
+        code.addAll(p.code); // TODO: Maybe?
 
-        //    TODO: Generate code for HW2
+        // 2. if lhs is ID, check against Env to see if it's a local var or a param;
+        //    if yes, generate an IR.Move instruction
+        if (n.lhs instanceof Ast.Id) {
+            if (env.containsKey(((Ast.Id) n.lhs).nm)) {
+                IR.Dest lhs = new IR.Id(((Ast.Id) n.lhs).nm);
+                code.add(new IR.Move(lhs, p.src));
+                code.addAll(p.code);
+            }
+        } else {
+            // 3. otherwise, call genAddr() on lhs, and generate an IR.Store instruction
+            AddrPack ap = genAddr(n.lhs, cinfo, env);
+            code.addAll(ap.code);
+            code.add(new IR.Store(p.type, ap.addr, p.src));
+        }
         return code;
-
-
     }
 
     // CallStmt ---
@@ -509,13 +518,23 @@ public class IRGen {
     // (See class notes.)
     //
     static List<IR.Inst> gen(Ast.If n, ClassInfo cinfo, Env env) throws Exception {
-
-
-        //    TODO: Generate code for HW2
-        return null;
-
-
-    }
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        IR.Label L1 = new IR.Label();
+        CodePack p = gen(n.cond, cinfo, env);
+        code.addAll(p.code);
+        code.add(new IR.CJump(IR.RelOP.EQ, p.src, IR.FALSE, L1));
+        code.addAll(gen(n.s1, cinfo, env));
+        if (n.s2 == null) {
+            code.add(new IR.LabelDec(L1.name));
+        } else {
+            IR.Label L2 = new IR.Label();
+            code.add(new IR.Jump(L2));
+            code.add(new IR.LabelDec(L1.name));
+            code.addAll(gen(n.s2, cinfo, env));
+            code.add(new IR.LabelDec(L2.name));
+        }
+        return code;
+    } // TODO: Check
 
     // While ---
     // Exp cond;
@@ -524,13 +543,18 @@ public class IRGen {
     // (See class notes.)
     //
     static List<IR.Inst> gen(Ast.While n, ClassInfo cinfo, Env env) throws Exception {
-
-
-        //    TODO: Generate code for HW2
-        return null;
-
-
-    }
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        IR.Label L1 = new IR.Label();
+        IR.Label L2 = new IR.Label();
+        code.add(new IR.LabelDec(L1.name));
+        CodePack p = gen(n.cond, cinfo, env);
+        code.addAll(p.code);
+        code.add(new IR.CJump(IR.RelOP.EQ, p.src, IR.FALSE, L2));
+        code.addAll(gen(n.s, cinfo, env));
+        code.add(new IR.Jump(L1));
+        code.add(new IR.LabelDec(L2.name));
+        return code;
+    } // TODO: Check
 
     // Print ---
     // Exp arg;
@@ -541,17 +565,13 @@ public class IRGen {
 
         if (n.arg == null) {
             // 1. If arg is null, generate an IR.Call with "print"
-            CodePack p = gen(n.arg, cinfo, env);
-            sources.add(p.src);
-            code.addAll(p.code);
-            code.add(new IR.Call(new IR.Global("print"), false, sources)); // TODO: Wrong-ish?
+            code.add(new IR.Call(new IR.Global("print"), false, sources));
         } else if (n.arg instanceof Ast.StrLit) {
             // 2. If arg is StrLit, generate an IR.Call with "printStr"
             CodePack p = gen(n.arg, cinfo, env);
             sources.add(p.src);
             code.addAll(p.code);
             code.add(new IR.Call(new IR.Global("printStr"), false, sources));
-
         } else {
             // 3. Otherwise, generate IR code for arg, and use its type info
             //    to decide which of the two functions, "printInt" and "printBool",
@@ -561,12 +581,12 @@ public class IRGen {
             code.addAll(p.code);
             if (p.type instanceof Ast.IntType) {
                 code.add(new IR.Call(new IR.Global("printInt"), false, sources));
-            } else if (p.type instanceof Ast.BoolType) {
+            } else if(p.type instanceof Ast.BoolType) {
                 code.add(new IR.Call(new IR.Global("printBool"), false, sources));
             }
         }
         return code;
-    }
+    } // TODO: Check
 
     // Return ---
     // Exp val;
@@ -589,7 +609,7 @@ public class IRGen {
             code.addAll(p.code);
             code.add(new IR.Return());
         }
-        // TODO: Verification
+        // TODO: Check
         return code;
 
 
@@ -635,19 +655,30 @@ public class IRGen {
     // Exp[] args; (ignored)
     //
     // Codegen Guideline:
-    //  1. Use class name to find the corresponding ClassInfo record
-    //  2. Find the class's type and object size from the ClassInfo record
-    //  3. Cosntruct a malloc call to allocate space for the object
-    //  4. Store a pointer to the class's descriptor into the first slot of
-    //     the allocated space
+
+
+
     //
     static CodePack gen(Ast.NewObj n, ClassInfo cinfo, Env env) throws Exception {
 
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
 
-        //    TODO: Generate code for HW2
-        return null;
+        //  1. Use class name to find the corresponding ClassInfo record
+        ClassInfo kn = cinfo.methodBaseClass(n.nm);
 
+        //  2. Find the class's type and object size from the ClassInfo record
+        IR.IntLit kn_size = new IR.IntLit(kn.objSize);
+        Ast.Type kn_type = kn.methodType(kn.name);
+        List<IR.Src> sources = new ArrayList<IR.Src>();
+        sources.add(kn_size);
 
+        //  3. Cosntruct a malloc call to allocate space for the object
+        code.add(new IR.Call(new IR.Id("malloc"), false, sources));
+
+        //  4. Store a pointer to the class's descriptor into the first slot of
+        //     the allocated space
+        CodePack p = gen(n, cinfo, env);
+        return p;
     }
 
     // Field ---
