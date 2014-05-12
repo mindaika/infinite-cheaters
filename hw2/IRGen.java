@@ -357,12 +357,12 @@ public class IRGen {
         IR.LabelDec begin = new IR.LabelDec("Begin");
         IR.LabelDec end = new IR.LabelDec("End");
         instList.add(begin);
-        IR.LabelDec glbllbl;
+        IR.Global glbllbl;
 
         // (Skip these two steps if method is "main".)
         if (!cinfo.isMainClass) {
             // 1. Construct a global label of form "<base class name>_<method name>"
-            glbllbl = new IR.LabelDec(cinfo.name + "_" + n.nm);
+            glbllbl = new IR.Global(cinfo.name + "_" + n.nm);
 
             // 2. Add "obj" into the params list as the 0th item
             n.params[0] = new Ast.Param(n.t, n.nm);
@@ -383,7 +383,7 @@ public class IRGen {
         // 4. Generate IR code for all statements
         for (Ast.Stmt s : n.stmts) {
             instList.addAll(gen(s, cinfo, newEnv));
-            //instList.add(glbllbl);
+//            instList.add(glbllbl.toString());
         }
         // 5. Return an IR.Func with the above
         instList.add(end);
@@ -544,13 +544,13 @@ public class IRGen {
             CodePack p = gen(n.arg, cinfo, env);
             sources.add(p.src);
             code.addAll(p.code);
-            code.add(new IR.Call(new IR.Id("print"), false, sources)); // TODO: Wrong-ish?
+            code.add(new IR.Call(new IR.Global("print"), false, sources)); // TODO: Wrong-ish?
         } else if (n.arg instanceof Ast.StrLit) {
             // 2. If arg is StrLit, generate an IR.Call with "printStr"
             CodePack p = gen(n.arg, cinfo, env);
             sources.add(p.src);
             code.addAll(p.code);
-            code.add(new IR.Call(new IR.Id("printStr"), false, sources));
+            code.add(new IR.Call(new IR.Global("printStr"), false, sources));
 
         } else {
             // 3. Otherwise, generate IR code for arg, and use its type info
@@ -560,11 +560,10 @@ public class IRGen {
             sources.add(p.src);
             code.addAll(p.code);
             if (p.type instanceof Ast.IntType) {
-                code.add(new IR.Call(new IR.Id("printInt"), false, sources));
+                code.add(new IR.Call(new IR.Global("printInt"), false, sources));
             } else if (p.type instanceof Ast.BoolType) {
-                code.add(new IR.Call(new IR.Id("printBool"), false, sources));
+                code.add(new IR.Call(new IR.Global("printBool"), false, sources));
             }
-            code.add(new IR.Call(null, true, sources));
         }
         return code;
     }
