@@ -357,6 +357,8 @@ public class IRGen {
         List<String> varps = new ArrayList<String>();
         IR.LabelDec begin = new IR.LabelDec("Begin");
         IR.LabelDec end = new IR.LabelDec("End");
+        List<IR.Inst> varList = new ArrayList<IR.Inst>();
+
 
         instList.add(begin);
 
@@ -380,6 +382,7 @@ public class IRGen {
         for (Ast.VarDecl v : n.vars) {
             newEnv.put(v.nm, v.t);
             varps.add(v.nm);
+            varList = gen(v, cinfo, newEnv);
         }
 
         // 4. Generate IR code for all statements
@@ -491,11 +494,11 @@ public class IRGen {
     // Common routine for Call and CallStmt nodes
     //
     // Codegen Guideline:
-    // 1. Invoke gen() on obj, which returns obj's storage address (and type and code)
-    // 2. With type info in the returning CodePack, figure out obj's base class
-    // 3. Access the base class's ClassInfo rec to get the method's offset in vtable
-    // 4. Add obj's as the 0th argument to the args list
-    // 5. Generate an IR.Load to get the class descriptor from obj's storage
+
+
+
+
+
     // 6. Generate another IR.Load to get the method's global label
     // 7. If retFlag is set, prepare a temp for receiving return value; also figure
     //    out return value's type (through method's decl in ClassInfo rec)
@@ -503,6 +506,29 @@ public class IRGen {
     //
     static CodePack handleCall(Ast.Exp obj, String name, Ast.Exp[] args,
                                ClassInfo cinfo, Env env, boolean retFlag) throws Exception {
+
+        // 1. Invoke gen() on obj, which returns obj's storage address (and type and code)
+        CodePack p = gen(obj, cinfo, env);
+
+        // 2. With type info in the returning CodePack, figure out obj's base class
+        ClassInfo ci = cinfo.methodBaseClass(p.type.toString());
+
+        // 3. Access the base class's ClassInfo rec to get the method's offset in vtable
+        int os = ci.offsets.get(name);
+
+        // 4. Add obj's as the 0th argument to the args list
+        args[0] = obj;
+
+        // 5. Generate an IR.Load to get the class descriptor from obj's storage
+        IR.Temp t = new IR.Temp();
+        IR.Load il = new IR.Load(gen(ci.methodType(name)), t, p. )
+
+
+
+
+
+
+
 
 
         //    TODO: Generate code for HW2
@@ -665,10 +691,11 @@ public class IRGen {
         ClassInfo kn = cinfo.methodBaseClass(n.nm);
 
         //  2. Find the class's type and object size from the ClassInfo record
-        IR.IntLit kn_size = new IR.IntLit(kn.objSize);
+        IR.IntLit arg = new IR.IntLit(kn.objSize * 4);
+        IR.Temp t = new IR.Temp();
         Ast.Type kn_type = kn.methodType(kn.name);
         List<IR.Src> sources = new ArrayList<IR.Src>();
-        sources.add(kn_size);
+//        sources.add(kn_size);
 
         //  3. Cosntruct a malloc call to allocate space for the object
         code.add(new IR.Call(new IR.Id("malloc"), false, sources));
@@ -691,23 +718,19 @@ public class IRGen {
 
     //
     static CodePack gen(Ast.Field n, ClassInfo cinfo, Env env) throws Exception {
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
 
         //   1.1 Call genAddr to generate field variable's address
         AddrPack ap = genAddr(n, cinfo, env);
+        code.addAll(ap.code);
+
 
         //   1.2 Add an IR.Load to get its value
-        IR.Id dst = new IR.Id(n.nm);
-        IR.Load ld = new IR.Load(gen(ap.type), dst, ap.addr);
-        CodePack cp = new CodePack();
-
-
-
-
-        //    TODO: Generate code for HW2
-        return gen();
-
-
-    }
+        IR.Temp t = new IR.Temp();
+        IR.Load ld = new IR.Load(gen(ap.type), t, ap.addr);
+        code.add(ld);
+        return new CodePack(ap.type, t, code);
+    }//TODO: Check
 
     // 2. genAddr()
     //
