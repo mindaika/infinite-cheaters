@@ -236,7 +236,7 @@ public class IRGen {
 
         // 2. Walk the MethodDecl list. If a method is not in the v-table, add it in;
         for (Ast.MethodDecl m : n.mthds) {
-            if (!cinfo.vtable.contains(m)) {
+            if (!cinfo.vtable.contains(m.nm)) {
                 cinfo.vtable.add(m.nm);
             }
         }
@@ -406,15 +406,14 @@ public class IRGen {
 
         // 1. If init exp exists, generate IR code for it and assign result to var
         if (n.init != null) {
-            IR.Id id = new IR.Id(n.nm);
             CodePack p = gen(n.init, cinfo, env);
-            IR.Move move = new IR.Move(id, p.src);
+            IR.Move move = new IR.Move(new IR.Id(n.nm), p.src);
             code.addAll(p.code);
             code.add(move);
         }
 
         // 2. Return generated code (or null if none)
-        return (n.init == null ? null :  code);
+        return (n.init == null ? null : code);
     }// TODO: Check
 
     // STATEMENTS
@@ -453,7 +452,7 @@ public class IRGen {
 
         // 1. call gen() on rhs
         CodePack p = gen(n.rhs, cinfo, env);
-        code.addAll(p.code); // TODO: Maybe?
+        code.addAll(p.code);
 
         // 2. if lhs is ID, check against Env to see if it's a local var or a param;
         //    if yes, generate an IR.Move instruction
@@ -467,7 +466,7 @@ public class IRGen {
             // 3. otherwise, call genAddr() on lhs, and generate an IR.Store instruction
             AddrPack ap = genAddr(n.lhs, cinfo, env);
             code.addAll(ap.code);
-            code.add(new IR.Store(p.type, ap.addr, p.src));
+            code.add(new IR.Store(gen(p.type), ap.addr, p.src));
         }
         return code;
     }
@@ -609,11 +608,9 @@ public class IRGen {
             code.addAll(p.code);
             code.add(new IR.Return());
         }
-        // TODO: Check
+
         return code;
-
-
-    }
+    }// TODO: Check
 
     // EXPRESSIONS
 
@@ -677,8 +674,8 @@ public class IRGen {
 
         //  4. Store a pointer to the class's descriptor into the first slot of
         //     the allocated space
-        CodePack p = gen(n, cinfo, env);
-        return p;
+        // TODO: What?
+        return gen(n, cinfo, env);
     }
 
     // Field ---
@@ -730,7 +727,7 @@ public class IRGen {
         if (env.containsKey(n.nm)) {
             //  2. If so, it means it is a local variable or a parameter. Just return
             //     a CodePack containing the Id.
-            return new CodePack(new Ast.ObjType(cinfo.name), thisObj); // TODO: Probably wrong
+            return new CodePack(env.get(n.nm), new IR.Id(n.nm));
         } else {
             //  3. Otherwise, the Id is an instance variable. Convert it into an
             //     Ast.Field node with Ast.This() as its obj, and invoke the gen routine
