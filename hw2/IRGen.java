@@ -495,19 +495,12 @@ public class IRGen {
     //
     // Codegen Guideline:
 
-
-
-
-
-    // 6. Generate another IR.Load to get the method's global label
-    // 7. If retFlag is set, prepare a temp for receiving return value; also figure
-    //    out return value's type (through method's decl in ClassInfo rec)
-    // 8. Generate an indirect call with the global label
-    //
     static CodePack handleCall(Ast.Exp obj, String name, Ast.Exp[] args,
                                ClassInfo cinfo, Env env, boolean retFlag) throws Exception {
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
 
         // 1. Invoke gen() on obj, which returns obj's storage address (and type and code)
+        AddrPack ap = genAddr(obj, cinfo, env);
         CodePack p = gen(obj, cinfo, env);
 
         // 2. With type info in the returning CodePack, figure out obj's base class
@@ -520,8 +513,26 @@ public class IRGen {
         args[0] = obj;
 
         // 5. Generate an IR.Load to get the class descriptor from obj's storage
+//          The obj in a Call/CallStmt always refers to a class object, which must have been allocated through a
+//          NewObj node earlier in the program.  When a gen routine is invoked on obj, the src component in the returned
+//          CodePack should represent a pointer to the allocated object.
         IR.Temp t = new IR.Temp();
-        IR.Load il = new IR.Load(gen(ci.methodType(name)), t, p. )
+        IR.Load il = new IR.Load(gen(p.type), t, (IR.Addr)p.src);
+
+        // TODO: 6. Generate another IR.Load to get the method's global label
+        IR.Temp t2 = new IR.Temp();
+        IR.Load il2 = new IR.Load(il.type, t2, il.addr);
+
+
+        // 7. If retFlag is set, prepare a temp for receiving return value; also figure
+        //    out return value's type (through method's decl in ClassInfo rec)
+        if (retFlag) {
+            IR.Temp t3 = new IR.Temp();
+            Ast.Type methType = cinfo.methodType(name);
+        }
+        code.add(il2);
+
+        // TODO: 8. Generate an indirect call with the global label
 
 
 
@@ -531,10 +542,10 @@ public class IRGen {
 
 
 
-        //    TODO: Generate code for HW2
-        return null;
 
 
+
+        return code;
     }
 
     // If ---
@@ -702,6 +713,7 @@ public class IRGen {
 
         //  4. Store a pointer to the class's descriptor into the first slot of
         //     the allocated space
+        IR.Type t2 = gen(cinfo.methodType(n.nm));
         // TODO: What?
         return gen(n, cinfo, env);
     }
@@ -736,25 +748,26 @@ public class IRGen {
     //
     // Codegen Guideline:
 
-    //   2.3 Access base class's ClassInfo rec to get field variable's offset
-    //   2.4 Generate an IR.Addr based on the offset
+
+
     //
     static AddrPack genAddr(Ast.Field n, ClassInfo cinfo, Env env) throws Exception {
 
         //   2.1 Call gen() on the obj component
-        AddrPack ap =  genAddr((Ast.Field) n.obj, cinfo, env);
+        CodePack p = gen(n, cinfo, env);
 
         //   2.2 Use the type info to figure out obj's base class
         // Base object class thing
         cinfo.methodBaseClass(n.nm);
 
+        //   2.3 Access base class's ClassInfo rec to get field variable's offset
+        int field_offset = classInfos.get(((Ast.ObjType) p.type).nm).fieldOffset(n.nm);
 
+        //   2.4 Generate an IR.Addr based on the offset
+        IR.Addr iraddr = new IR.Addr(p.src, field_offset);
 
-        //    TODO: Generate code for HW2
-        return null;
-
-
-    }
+        return new AddrPack(p.type, iraddr, p.code);
+    }//    TODO: Check
 
     // Id ---
     // String nm;
