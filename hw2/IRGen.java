@@ -337,6 +337,7 @@ public class IRGen {
         for (Ast.MethodDecl m : n.mthds) {
             funcYtown.add(gen(m, cinfo));
         }
+
         return funcYtown;
     } // TODO: Check
 
@@ -686,14 +687,24 @@ public class IRGen {
     // 1. gen()
     //
     // Codegen Guideline:
-    //   1.1 Call genAddr to generate field variable's address
-    //   1.2 Add an IR.Load to get its value
+
+
     //
     static CodePack gen(Ast.Field n, ClassInfo cinfo, Env env) throws Exception {
 
+        //   1.1 Call genAddr to generate field variable's address
+        AddrPack ap = genAddr(n, cinfo, env);
+
+        //   1.2 Add an IR.Load to get its value
+        IR.Id dst = new IR.Id(n.nm);
+        IR.Load ld = new IR.Load(gen(ap.type), dst, ap.addr);
+        CodePack cp = new CodePack();
+
+
+
 
         //    TODO: Generate code for HW2
-        return null;
+        return gen();
 
 
     }
@@ -701,12 +712,19 @@ public class IRGen {
     // 2. genAddr()
     //
     // Codegen Guideline:
-    //   2.1 Call gen() on the obj component
-    //   2.2 Use the type info to figure out obj's base class
+
     //   2.3 Access base class's ClassInfo rec to get field variable's offset
     //   2.4 Generate an IR.Addr based on the offset
     //
     static AddrPack genAddr(Ast.Field n, ClassInfo cinfo, Env env) throws Exception {
+
+        //   2.1 Call gen() on the obj component
+        AddrPack ap =  genAddr((Ast.Field) n.obj, cinfo, env);
+
+        //   2.2 Use the type info to figure out obj's base class
+        // Base object class thing
+        cinfo.methodBaseClass(n.nm);
+
 
 
         //    TODO: Generate code for HW2
