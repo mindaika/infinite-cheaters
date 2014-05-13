@@ -8,6 +8,7 @@
 
 import ast.Ast;
 import ast.astParser;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import ir.IR;
 
 import java.io.FileInputStream;
@@ -500,14 +501,14 @@ public class IRGen {
         List<IR.Inst> code = new ArrayList<IR.Inst>();
 
         // 1. Invoke gen() on obj, which returns obj's storage address (and type and code)
-        AddrPack ap = genAddr(obj, cinfo, env);
         CodePack p = gen(obj, cinfo, env);
 
         // 2. With type info in the returning CodePack, figure out obj's base class
         ClassInfo ci = cinfo.methodBaseClass(p.type.toString());
 
         // 3. Access the base class's ClassInfo rec to get the method's offset in vtable
-        int os = ci.offsets.get(name);
+        // methodOffset
+        int os = ci.methodOffset(name);
 
         // 4. Add obj's as the 0th argument to the args list
         args[0] = obj;
@@ -520,32 +521,23 @@ public class IRGen {
         IR.Load il = new IR.Load(gen(p.type), t, (IR.Addr)p.src);
 
         // TODO: 6. Generate another IR.Load to get the method's global label
-        IR.Temp t2 = new IR.Temp();
-        IR.Load il2 = new IR.Load(il.type, t2, il.addr);
+
+        IR.Addr ida = new IR.Addr(t, os);
+        IR.Load il2 = new IR.Load(gen(p.type), t, ida);
+        code.add(il2);
 
 
         // 7. If retFlag is set, prepare a temp for receiving return value; also figure
-        //    out return value's type (through method's decl in ClassInfo rec)
+        //    out return value's type (through method's decl in ClassInfo rec)       ;
+        IR.Temp t3 = new IR.Temp();
         if (retFlag) {
-            IR.Temp t3 = new IR.Temp();
-            Ast.Type methType = cinfo.methodType(name);
+            Ast.Type methType = ci.methodType(name);
         }
-        code.add(il2);
 
         // TODO: 8. Generate an indirect call with the global label
+        code.add(new IR.Call(t3, retFlag, ));
 
-
-
-
-
-
-
-
-
-
-
-
-        return code;
+        return p;
     }
 
     // If ---
@@ -695,27 +687,29 @@ public class IRGen {
 
     //
     static CodePack gen(Ast.NewObj n, ClassInfo cinfo, Env env) throws Exception {
-
+        List<IR.Src> sources = new ArrayList<IR.Src>();
         List<IR.Inst> code = new ArrayList<IR.Inst>();
 
         //  1. Use class name to find the corresponding ClassInfo record
-        ClassInfo kn = cinfo.methodBaseClass(n.nm);
+        ClassInfo kn = classInfos.get(n.nm);
 
         //  2. Find the class's type and object size from the ClassInfo record
-        IR.IntLit arg = new IR.IntLit(kn.objSize * 4);
-        IR.Temp t = new IR.Temp();
-        Ast.Type kn_type = kn.methodType(kn.name);
-        List<IR.Src> sources = new ArrayList<IR.Src>();
-//        sources.add(kn_size);
+        // Or don't
+        IR.IntLit arg = new IR.IntLit(kn.objSize); // Should be the object size
+        CodePack p = (gen(n.args[0], cinfo, env)); // TODO: Not work
+        sources.add(p.src);
 
-        //  3. Cosntruct a malloc call to allocate space for the object
-        code.add(new IR.Call(new IR.Id("malloc"), false, sources));
+        //  3. Construct a malloc call to allocate space for the object
+        IR.Temp t = new IR.Temp();
+        code.add(new IR.Call(new IR.Id("malloc"), false, sources, t));
 
         //  4. Store a pointer to the class's descriptor into the first slot of
         //     the allocated space
-        IR.Type t2 = gen(cinfo.methodType(n.nm));
         // TODO: What?
-        return gen(n, cinfo, env);
+
+
+        IR.Store irstore = new IR.Store(gen(p.type),  , p.src);
+        return p;
     }
 
     // Field ---
@@ -754,7 +748,7 @@ public class IRGen {
     static AddrPack genAddr(Ast.Field n, ClassInfo cinfo, Env env) throws Exception {
 
         //   2.1 Call gen() on the obj component
-        CodePack p = gen(n, cinfo, env);
+        CodePack p = gen(n.obj, cinfo, env);
 
         //   2.2 Use the type info to figure out obj's base class
         // Base object class thing
