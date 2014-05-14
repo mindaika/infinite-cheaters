@@ -38,7 +38,7 @@ class Cons extends Expr {
         if (consTail.eval(null) instanceof EmptyList)
             return consHead.show();
         return consHead.show() + ", " + consTail.show();
-    } //TODO: Fix
+    }
 
     Value eval(Env env) {
         Value temp = consTail.eval(env);
@@ -47,7 +47,7 @@ class Cons extends Expr {
         } else {
             throw new RuntimeException("ABORT: list value expected");
         }
-    }//TODO: Fix
+    }
 }
 
 /* Expressions of the form nonEmpty(e), represented using a class
