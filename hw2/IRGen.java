@@ -8,7 +8,6 @@
 
 import ast.Ast;
 import ast.astParser;
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import ir.IR;
 
 import java.io.FileInputStream;
@@ -360,17 +359,18 @@ public class IRGen {
         IR.LabelDec end = new IR.LabelDec("End");
         List<IR.Inst> varList = new ArrayList<IR.Inst>();
 
-
         instList.add(begin);
 
         // (Skip these two steps if method is "main".)
-        if (!cinfo.isMainClass) {
+        String glbllbl;
+        if (!n.nm.equals("main")) {
             // 1. Construct a global label of form "<base class name>_<method name>"
-            IR.Global glbllbl = new IR.Global(cinfo.name + "_" + n.nm);
-//            instList.add(glbllbl); // TODO: This not work.
+            glbllbl = (cinfo.name + "_" + n.nm);
 
             // 2. Add "obj" into the params list as the 0th item
-            n.params[0] = new Ast.Param(n.t, n.nm);
+            paramps.add("obj");
+        } else {
+            glbllbl = ("main");
         }
 
         // 3. Create an Env() containing all params and all local vars
@@ -383,7 +383,9 @@ public class IRGen {
         for (Ast.VarDecl v : n.vars) {
             newEnv.put(v.nm, v.t);
             varps.add(v.nm);
-            varList = gen(v, cinfo, newEnv);
+            List<IR.Inst> insTemp = gen(v, cinfo, newEnv);
+            if (insTemp != null)
+                instList.addAll(insTemp);
         }
 
         // 4. Generate IR code for all statements
@@ -396,7 +398,7 @@ public class IRGen {
         }
         instList.add(end);
 
-        return new IR.Func(n.nm, paramps, varps, instList);
+        return new IR.Func(glbllbl, paramps, varps, instList);
     }// TODO: Check
 
     // VarDecl ---
@@ -415,10 +417,12 @@ public class IRGen {
             IR.Move move = new IR.Move(new IR.Id(n.nm), p.src);
             code.addAll(p.code);
             code.add(move);
+            return code;
         }
 
         // 2. Return generated code (or null if none)
-        return (n.init == null ? null : code);
+        return null;
+//        return (n.init == null ? null : code);
     }// TODO: Check
 
     // STATEMENTS
@@ -499,45 +503,56 @@ public class IRGen {
     static CodePack handleCall(Ast.Exp obj, String name, Ast.Exp[] args,
                                ClassInfo cinfo, Env env, boolean retFlag) throws Exception {
         List<IR.Inst> code = new ArrayList<IR.Inst>();
+        List<IR.Src> srclist = new ArrayList<IR.Src>();
 
         // 1. Invoke gen() on obj, which returns obj's storage address (and type and code)
         CodePack p = gen(obj, cinfo, env);
 
         // 2. With type info in the returning CodePack, figure out obj's base class
         ClassInfo ci = cinfo.methodBaseClass(p.type.toString());
+        cinfo.vtable.contains()
 
         // 3. Access the base class's ClassInfo rec to get the method's offset in vtable
-        // methodOffset
         int os = ci.methodOffset(name);
 
         // 4. Add obj's as the 0th argument to the args list
-        args[0] = obj;
+        srclist.add(p.src);
+        code.addAll(p.code);
 
         // 5. Generate an IR.Load to get the class descriptor from obj's storage
 //          The obj in a Call/CallStmt always refers to a class object, which must have been allocated through a
 //          NewObj node earlier in the program.  When a gen routine is invoked on obj, the src component in the returned
 //          CodePack should represent a pointer to the allocated object.
         IR.Temp t = new IR.Temp();
-        IR.Load il = new IR.Load(gen(p.type), t, (IR.Addr)p.src);
+        IR.Load il = new IR.Load(IR.Type.PTR, t, new IR.Addr(p.src));
+        code.add(il);
 
-        // TODO: 6. Generate another IR.Load to get the method's global label
-
-        IR.Addr ida = new IR.Addr(t, os);
-        IR.Load il2 = new IR.Load(gen(p.type), t, ida);
+        // 6. Generate another IR.Load to get the method's global label
+        IR.Temp t2 = new IR.Temp();
+        IR.Load il2 = new IR.Load(IR.Type.PTR, t2, new IR.Addr(t, os));
         code.add(il2);
 
-
         // 7. If retFlag is set, prepare a temp for receiving return value; also figure
-        //    out return value's type (through method's decl in ClassInfo rec)       ;
-        IR.Temp t3 = new IR.Temp();
+        //    out return value's type (through method's decl in ClassInfo rec)
+        IR.Temp t3 = null;
+        Ast.Type methType = null;
         if (retFlag) {
-            Ast.Type methType = ci.methodType(name);
+            t3 = new IR.Temp();
+            methType = ci.methodType(name);
+            code.add(new IR.Call(null, false, srclist));
         }
 
-        // TODO: 8. Generate an indirect call with the global label
-        code.add(new IR.Call(t3, retFlag, ));
+        for (Ast.Exp e : args) {
+            CodePack p2 = gen(e, cinfo, env);
+            code.addAll(p2.code);
+            srclist.add(p2.src);
+        }
 
-        return p;
+        // 8. Generate an indirect call with the global label
+        // True for indirect
+        code.add(new IR.Call(t2, true, srclist, t3));
+
+        return new CodePack(methType, t3, code);
     }
 
     // If ---
@@ -682,34 +697,30 @@ public class IRGen {
     // Exp[] args; (ignored)
     //
     // Codegen Guideline:
-
-
-
     //
     static CodePack gen(Ast.NewObj n, ClassInfo cinfo, Env env) throws Exception {
         List<IR.Src> sources = new ArrayList<IR.Src>();
         List<IR.Inst> code = new ArrayList<IR.Inst>();
 
         //  1. Use class name to find the corresponding ClassInfo record
-        ClassInfo kn = classInfos.get(n.nm);
+        ClassInfo kn = classInfos.get(cinfo.name);
 
         //  2. Find the class's type and object size from the ClassInfo record
         // Or don't
         IR.IntLit arg = new IR.IntLit(kn.objSize); // Should be the object size
-        CodePack p = (gen(n.args[0], cinfo, env)); // TODO: Not work
-        sources.add(p.src);
 
         //  3. Construct a malloc call to allocate space for the object
         IR.Temp t = new IR.Temp();
         code.add(new IR.Call(new IR.Id("malloc"), false, sources, t));
+        sources.add(t);
 
         //  4. Store a pointer to the class's descriptor into the first slot of
         //     the allocated space
-        // TODO: What?
+        IR.Temp t2 = new IR.Temp();
+        code.add(new IR.Store(gen(new Ast.BoolType()), new IR.Addr(arg), t2));
+        sources.add(t2);
 
-
-        IR.Store irstore = new IR.Store(gen(p.type),  , p.src);
-        return p;
+        return new CodePack(new Ast.BoolType(), t2, code);
     }
 
     // Field ---
@@ -717,7 +728,6 @@ public class IRGen {
     // String nm;
     //
 
-    // 1. gen()
     //
     // Codegen Guideline:
 
@@ -729,7 +739,6 @@ public class IRGen {
         //   1.1 Call genAddr to generate field variable's address
         AddrPack ap = genAddr(n, cinfo, env);
         code.addAll(ap.code);
-
 
         //   1.2 Add an IR.Load to get its value
         IR.Temp t = new IR.Temp();
@@ -752,7 +761,7 @@ public class IRGen {
 
         //   2.2 Use the type info to figure out obj's base class
         // Base object class thing
-        cinfo.methodBaseClass(n.nm);
+        ClassInfo kp = cinfo.methodBaseClass(n.nm);
 
         //   2.3 Access base class's ClassInfo rec to get field variable's offset
         int field_offset = classInfos.get(((Ast.ObjType) p.type).nm).fieldOffset(n.nm);
