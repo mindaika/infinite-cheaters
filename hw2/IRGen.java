@@ -148,7 +148,6 @@ public class IRGen {
         //       "<base class name>_<method name>" and save it in an IR.Global node
         List<IR.Global> globalList = new ArrayList<IR.Global>();
         for (String k : cinfo.vtable) {
-//            globalList.add(new IR.Global(cinfo.methodBaseClass(m.nm).name + "_" + m.nm));
             globalList.add(new IR.Global(cinfo.methodBaseClass(k).name + "_" + k));
         }
 
