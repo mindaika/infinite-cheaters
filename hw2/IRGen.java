@@ -147,8 +147,9 @@ public class IRGen {
         //   1.1 For each method in class's vtable, construct a global label of form
         //       "<base class name>_<method name>" and save it in an IR.Global node
         List<IR.Global> globalList = new ArrayList<IR.Global>();
-        for (Ast.MethodDecl m : n.mthds) {
-            globalList.add(new IR.Global(cinfo.methodBaseClass(m.nm).name + "_" + m.nm));
+        for (String k : cinfo.vtable) {
+//            globalList.add(new IR.Global(cinfo.methodBaseClass(m.nm).name + "_" + m.nm));
+            globalList.add(new IR.Global(cinfo.methodBaseClass(k).name + "_" + k));
         }
 
         //   1.2 Assemble the list of IR.Global nodes into an IR.Data node with a
