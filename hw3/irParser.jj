@@ -1,0 +1,308 @@
+// This is supporting software for CS322 Compilers and Language Design II
+// Copyright (c) Portland State University
+//
+// Three-address IR code parser (Jingke Li)
+//
+// Version 5. (Last modified on 2/15/14.)   
+//
+PARSER_BEGIN(irParser)
+import java.util.*;
+import java.io.*;
+
+public class irParser {
+}
+PARSER_END(irParser)
+
+SKIP : /* WHITE SPACE */
+{
+  " " | "\t" | "\r" | "\f"
+}
+
+SKIP : /* COMMENTS */
+{
+  <COMMENT: "#" (~["\n"])*>
+| <LINENUM: (<Digit>)+".">   
+}
+
+TOKEN : 
+{
+  <kwData:   "data"> 
+| <kwCall:   "call"> 
+| <kwGoto:   "goto">  
+| <kwIf:     "if">  
+| <kwReturn: "return">
+| <kwSize:   "sz="> 
+| <#Digit:   ["0"-"9"]>
+| <#Letter:  ["A"-"Z"]|["a"-"z"]>
+| <IntLit:   (<Digit>)+> 
+| <BoolLit:  "true"|"false"> 
+| <StrLit:   "\""(~["\"","\n"])+"\"">
+| <IntType:  ":I">
+| <BoolType: ":B">
+| <PtrType:  ":P">
+| <Temp: "t" (<Digit>)+>
+| <Id: (<Letter> (<Letter>|<Digit>|"_")*)>
+| <Global: "_" <Id>>
+}
+
+// Program -> {Data} {Func}
+//
+IR.Program Program():
+{ List<IR.Data> data = new ArrayList<IR.Data>(); IR.Data d;
+  List<IR.Func> funcs = new ArrayList<IR.Func>(); IR.Func f; }
+{
+  ( d=Data() { data.add(d); } | "\n" )*
+  ( f=Func() { funcs.add(f); } ("\n")* )* <EOF>
+  { return new IR.Program(data,funcs); }
+}
+
+// Data -> "data" Global "(" "sz=" IntLit ")" ":" [Const {"," Const}] <EOL>
+//
+IR.Data Data():
+{ List<IR.Const> items = new ArrayList<IR.Const>();
+  IR.Global name; IR.IntLit size; IR.Const c; }
+{
+  "data" name=Global() "(" "sz=" size=IntLit() ")" ":" 
+    [ c=Const() { items.add(c); } ( "," c=Const() { items.add(c); } )* ] "\n" 
+  { return new IR.Data(name,size.i,items); }
+}
+
+// Const -> Global | IntLit
+// 
+IR.Const Const():
+{ IR.Const c; }
+{
+  ( c=Global() | c=IntLit() ) 
+  { return c; }
+}
+
+// Func -> Global VarList <EOL>          // Tgt Params
+//         [VarList <EOL>]               // Locals
+//         "{" {Inst | <EOL>} "}" <EOL>  // Body
+//
+IR.Func Func():
+{ IR.Type type=null;
+  IR.Global g;
+  IR.Inst inst;
+  List<String> params;
+  List<String> locals = new ArrayList<String>();
+  List<IR.Inst> code = new ArrayList<IR.Inst>(); }
+{
+  g=Global() params=VarList() "\n"
+    [ locals=VarList() "\n" ]
+    "{" ( inst=Inst() { code.add(inst); } | "\n" )* "}"
+  { return new IR.Func(g.name,params,locals,code); }
+}
+
+IR.Type Type():
+{ Token t; IR.Type type; }
+{
+  ( t=<IntType>   { type = IR.Type.INT; }
+  | t=<BoolType>  { type = IR.Type.BOOL; }
+  | t=<PtrType>   { type = IR.Type.PTR; } )
+  { return type; }
+}
+
+// VarList -> "(" [<Id> T{"," <Id>}] ")"
+//
+List<String> VarList():
+{ Token t;
+  IR.Type type=null;
+  List<String> vars = new ArrayList<String>(); }
+{
+  "(" [ t=<Id> { vars.add(t.image); } 
+      ( "," t=<Id> { vars.add(t.image); } )* ] ")"
+  { return vars; }
+}
+
+// Inst -> ( Dest "=" Src BOP Src              	     // Binop
+//         | Dest "=" UOP Src                        // Unop
+//         | Dest "=" Src                            // Move
+//         | Dest "=" Addr Type                      // Load
+//         | Addr Type "=" Src                       // Store
+//         | [Dest "="] "call" ["*"] CallTgt ArgList // Call
+//         | "return" [Src]                          // Return [val]
+//         | "if" Src ROP Src "goto" Label     	     // CJump
+//         | "goto" Label                            // Jump
+//         | Label ":"                               // LabelDec
+//         ) <EOL>
+//
+IR.Inst Inst():
+{ IR.Label lab; 
+  IR.Type type=null;
+  IR.BOP bop=null; 
+  IR.RelOP rop=null; 
+  IR.UOP uop;
+  IR.Inst inst=null;
+  IR.Addr addr;
+  IR.Dest dst, loc=null;
+  IR.Temp tmp=null;
+  IR.Src src=null, src2=null; 
+  IR.CallTgt c=null;
+  List<IR.Src> args;
+  boolean ind=false;
+  int offset=0; }
+{
+  ( LOOKAHEAD(2) dst=Dest() "="
+    ( LOOKAHEAD(2) addr=Addr() type=Type()
+                   { inst = new IR.Load(type,dst,addr); }
+
+    | src=Src() [ bop=BOP() src2=Src() 
+	             { inst = new IR.Binop(bop,dst,src,src2); } ] 
+	           { if (inst==null) inst = new IR.Move(dst,src); }
+	
+    | uop=UOP() src=Src() 
+                   { inst = new IR.Unop(uop,dst,src); } 
+
+    | "call" ["*" { ind = true; }] c=CallTgt() args=ArgList()
+	           { inst = new IR.Call(c,ind,args,dst); }
+    )
+  | addr=Addr() type=Type() "=" src=Src()
+                   { inst = new IR.Store(type,addr,src); }
+
+  | "call" ["*" { ind = true; }] c = CallTgt() args=ArgList()
+                   { inst = new IR.Call(c,ind,args); }
+
+  | "return" [ src=Src() ] { inst = new IR.Return(src); } 
+
+  | "if" src=Src() rop=RelOP() src2=Src() "goto" lab=Label()
+                   { inst = new IR.CJump(rop,src,src2,lab); }
+
+  | "goto" lab=Label() { inst = new IR.Jump(lab); }
+  | lab=Label() ":"    { inst = new IR.LabelDec(lab.name); }
+  ) "\n"
+  { return inst; }
+}
+
+// ArgList -> "(" [Src {"," Src}] ")"
+//
+List<IR.Src> ArgList(): 
+{ List<IR.Src> args = new ArrayList<IR.Src>(); 
+  IR.Src arg; }
+{
+  "(" [ arg=Src() { args.add(arg); } 
+	( "," arg=Src() { args.add(arg); } )* ] ")"
+  { return args; }
+}
+
+IR.ArithOP ArithOP():
+{ IR.ArithOP op=null; }
+{ 
+  ( "+"  { op = IR.ArithOP.ADD; } | "-"  { op = IR.ArithOP.SUB; }
+  | "*"  { op = IR.ArithOP.MUL; } | "/"  { op = IR.ArithOP.DIV; }
+  | "&&" { op = IR.ArithOP.AND; } | "||" { op = IR.ArithOP.OR; } )
+  { return op; }
+}
+
+IR.RelOP RelOP():
+{ IR.RelOP op=null; }
+{
+  ( "==" { op = IR.RelOP.EQ; }  | "!=" { op = IR.RelOP.NE; }
+  | "<"  { op = IR.RelOP.LT; }  | "<=" { op = IR.RelOP.LE; }
+  | ">"  { op = IR.RelOP.GT; }  | ">=" { op = IR.RelOP.GE; } )
+  { return op; }
+}
+
+IR.BOP BOP():
+{ IR.BOP op; }
+{ 
+  ( op=ArithOP() | op=RelOP() )
+  { return op; }
+}
+
+IR.UOP UOP():
+{ IR.UOP op=null; }
+{ 
+  ( "-"  { op = IR.UOP.NEG; } | "!"  { op = IR.UOP.NOT; } )
+  { return op; }
+}
+
+IR.Label Label():
+{ Token t; }
+{
+  t=<Id> 
+  { return new IR.Label(t.image); }
+}
+
+// Addr -> [IntLit] "[" Dest "]"
+//
+IR.Addr Addr():
+{ IR.IntLit v; int offset=0; IR.Src src; }
+{
+  [ v=IntLit() { offset = v.i; } ]
+  "[" src=Src() "]"
+  { return new IR.Addr(src, offset); }
+}
+
+// Src -> Id | Temp | Global | IntLit | BoolLit | StrLit 
+//
+IR.Src Src():
+{ IR.Src src; }
+{
+  ( src=Id() | src=Temp() | src=Global() 
+  | src=IntLit() | src=BoolLit() | src=StrLit() )
+  { return src; }
+}
+
+// Dest -> Id | Temp  
+//
+IR.Dest Dest():
+{ IR.Dest dst; }
+{
+  ( dst=Id() | dst=Temp() )
+  { return dst; }
+}
+
+// CallTgt -> Id | Temp | Global 
+//
+IR.CallTgt CallTgt():
+{ IR.CallTgt tgt; }
+{
+  ( tgt=Id() | tgt=Temp() | tgt=Global() )
+  { return tgt; }
+}
+
+IR.Id Id():
+{ Token t; }
+{
+  t=<Id> 
+  { return new IR.Id(t.image); }
+}
+
+IR.Temp Temp():
+{ Token t; String s; }
+{
+  t=<Temp>   	
+  { s = t.image.substring(1,t.image.length());
+    return new IR.Temp(Integer.parseInt(s)); }
+}
+
+IR.Global Global():
+{ Token t; }
+{
+  t=<Global>
+  { return new IR.Global(t.image.substring(1,t.image.length())); }
+}
+
+IR.IntLit IntLit():
+{ Token t; }
+{
+  t=<IntLit>  
+  { return new IR.IntLit(Integer.parseInt(t.image)); }
+}
+
+IR.BoolLit BoolLit():
+{ Token t; }
+{
+  t=<BoolLit>  
+  { return new IR.BoolLit(Boolean.parseBoolean(t.image)); }
+}
+
+IR.StrLit StrLit():
+{ Token t; }
+{
+  t=<StrLit>  
+  { return new IR.StrLit(t.image.substring(1,t.image.length()-1)); }
+}
+
+
