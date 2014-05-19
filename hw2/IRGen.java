@@ -141,7 +141,7 @@ public class IRGen {
     static IR.Data genData(Ast.ClassDecl n, ClassInfo cinfo) throws Exception {
         // Skip if 'Main' class
         if (cinfo.isMainClass) {
-            return null;
+            return new IR.Data(null, 0, new ArrayList<IR.Global>());
         }
 
         //   1.1 For each method in class's vtable, construct a global label of form
