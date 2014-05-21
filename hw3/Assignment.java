@@ -1,3 +1,7 @@
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
+
 import java.util.*;
 
 /**
@@ -18,7 +22,16 @@ class Assignment {
         // Calculate live ranges
         Map<IR.Reg, Set<Integer>> liveRanges = Liveness.calculateLiveRanges(liveOutSets);
 
+        // Test
+//        System.out.println(Liveness.calculateLiveRanges(liveOutSets));
+        // Test
+
         // REPLACE FROM HERE ....
+        UndirectedGraph<IR.Reg, DefaultEdge> iG = new SimpleGraph<>(DefaultEdge.class);
+        CircularArrayList<X86.Reg> regLoop;
+        Stack<IR.Reg> irRegisterStack = new Stack<>();
+        //System.out.println(iG.edgesOf(2));
+
 
         // For now, do extremely simplistic allocation: simply allocate registers to
         // IR.Reg's eagerly, in arbitrary order.  Once a register is used, we don't
@@ -27,15 +40,54 @@ class Assignment {
         // Keep track of available registers
         Set<X86.Reg> availableRegs = new HashSet<X86.Reg>();
         // start by assuming all registers are available
-        for (X86.Reg r : X86.allRegs)
+        for (X86.Reg r : X86.allRegs) {
             availableRegs.add(r);
+        }
+
         // always rule out special-purpose registers
         availableRegs.remove(X86.RSP);
         availableRegs.remove(IR.tempReg1);
         availableRegs.remove(IR.tempReg2);
+        System.out.println("\nVERTEXES N' SHIT");
+        System.out.println(iG.vertexSet() + "\n");
+        regLoop = new CircularArrayList<>(availableRegs.size());
+        regLoop.addAll(availableRegs);
+
+        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
+            iG.addVertex(me.getKey());
+        }
 
         // Work through the list of live IR registers (in arbitrary order)
         for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
+
+            // This should make a graph of the registers
+            for (Integer k : me.getValue()) {
+                for (Map.Entry<IR.Reg, Set<Integer>> you : liveRanges.entrySet()) {
+                    if (you.getValue().contains(k) && !you.equals(me)) {
+                        iG.addEdge(me.getKey(), you.getKey());
+                    }
+                }
+            }
+        }
+
+        // Create a stack of iGs by size
+        while (!(iG.vertexSet().isEmpty())) {
+            IR.Reg next = null;
+            for (IR.Reg i : iG.vertexSet()) {
+                int j = 0;
+                if (iG.degreeOf(i) >= j) {
+                    next = i;
+                }
+            }
+            irRegisterStack.push(next);
+            iG.removeVertex(next);
+        }
+
+        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
+            System.out.println("OUTPUT, MOTHAFUCKA");
+            System.out.println(irRegisterStack.peek());
+//            System.out.println(iG.degreeOf(me.getKey()));
+            System.out.println( me.getKey() + " " + me.getValue() + "\n");
             IR.Reg r = me.getKey();
             Set<Integer> range = me.getValue();
             X86.Reg treg = findAssignment(availableRegs,
@@ -46,7 +98,7 @@ class Assignment {
                 System.err.println("oops: out of registers");
                 assert (false);
             }
-            // We found a register; mark it as unavailable and record assignmenta
+            // We found a register; mark it as unavailable and record assignment
             availableRegs.remove(treg);
             env.put(r, treg);
             // DEBUG

@@ -1,8 +1,9 @@
 /* Library support routines for code generated from miniJava source */
-/* Mac version. */
 
 #include <stdlib.h>
 #include <stdio.h>
+
+extern void _main();
 
 int main() {
   _main();
