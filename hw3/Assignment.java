@@ -25,7 +25,6 @@ class Assignment {
         MyGraph iG = new MyGraph();
         Set<X86.Reg> regHashSet = new HashSet<>();
         Stack<Map.Entry> monoStack = new Stack<>();
-        //System.out.println(iG.edgesOf(2));
 //
 //
 //        // For now, do extremely simplistic allocation: simply allocate registers to
@@ -44,10 +43,10 @@ class Assignment {
         regHashSet.remove(IR.tempReg2);
 
         // Print info about LiveRanges
-        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
-            System.out.println("DEBUG:");
-            System.out.println(me.getKey() + ": " + me.getValue().toString() + "\n");
-        }
+//        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
+//            System.out.println("DEBUG:");
+//            System.out.println(me.getKey() + ": " + me.getValue().toString() + "\n");
+//        }
 
         // To build graph:
         // 1. Add Nodes for every entry in the liveRanges set
@@ -72,7 +71,7 @@ class Assignment {
                 }
             }
         }
-        iG.printGraph();
+//        iG.printGraph();
 
         // TODO: Sort the regKEy list by size
         // Whilst ye olde Graph isn't not non-empty
@@ -116,7 +115,7 @@ class Assignment {
             // We found a register; mark it as unavailable and record assignment//
             env.put(node, treg);
 //          DEBUG
-            System.err.println("allocating " + node + " to " + treg);
+//            System.err.println("allocating " + node + " to " + treg);
         }
         // TODO: ... TO HERE
 
