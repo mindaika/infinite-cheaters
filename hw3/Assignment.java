@@ -82,16 +82,16 @@ class Assignment {
         // Choose a node of appropriateness
         while (!iG.getGraph().isEmpty()) {
             Map.Entry killNode = null;
+            int smallestSize = regHashSet.size();
             for (Map.Entry regKey : iG.getGraph().entrySet()) {
-                // Test to see if coloring is viable
-                if (((List) regKey.getValue()).size() < regHashSet.size()) {
-                    // Push node and carry one
-                    monoStack.push(regKey);
+                // Find minimum node and ensure it still works
+                if ((((Set) regKey.getValue()).size() <= smallestSize)) {
                     killNode = regKey;
-                    break;
+                    smallestSize = ((Set) regKey.getValue()).size();
                 }
             }
             if (killNode != null) {
+                monoStack.push(killNode);
                 iG.removeNode((IR.Reg) killNode.getKey());
             }
         }
@@ -105,7 +105,7 @@ class Assignment {
 //            IR.Reg r = (IR.Reg)p.getKey();
             IR.Reg node = (IR.Reg) p.getKey();
             // TODO: Something about this unchecked cast
-            ArrayList<IR.Reg> neighbors = (ArrayList<IR.Reg>) p.getValue();
+            HashSet<IR.Reg> neighbors = (HashSet<IR.Reg>) p.getValue();
             Set<X86.Reg> availRegs = new HashSet<>();
             availRegs.addAll(regHashSet);
             for (IR.Reg j : neighbors) {
@@ -121,11 +121,9 @@ class Assignment {
                 System.err.println("oops: out of registers");
                 assert (false);
             }
-            // We found a register; mark it as unavailable and record assignment
-//            registerDeque.remove(treg);
+            // We found a register; mark it as unavailable and record assignment//
             env.put(node, treg);
-//            registerDeque.addLast(treg);
-//            DEBUG
+//          DEBUG
             System.err.println("allocating " + node + " to " + treg);
         }
 
