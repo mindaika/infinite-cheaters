@@ -33,9 +33,10 @@ class Assignment {
 //
 //        // Keep track of available registers
 //        // start by assuming all registers are available
-        for (X86.Reg r : X86.allRegs) {
-            regHashSet.add(r);
-        }
+        Collections.addAll(regHashSet, X86.allRegs);
+//        for (X86.Reg r : X86.allRegs) {
+//            regHashSet.add(r);
+//        }
 
         // always rule out special-purpose registers
         regHashSet.remove(X86.RSP);
@@ -96,14 +97,14 @@ class Assignment {
             Map.Entry p = monoStack.pop();
             IR.Reg node = (IR.Reg) p.getKey();
             // TODO: Something about this unchecked cast
-            HashSet<IR.Reg> neighbors = (HashSet<IR.Reg>) p.getValue();
+            HashSet<IR.Reg> neighbors = HashSet.class.cast(p.getValue());
             Set<X86.Reg> availRegs = new HashSet<>();
             availRegs.addAll(regHashSet);
             for (IR.Reg j : neighbors) {
                 availRegs.remove(env.get(j));
             }
 //            System.out.println("Debug");
-            Set<Integer> range = liveRanges.get((IR.Reg) p.getKey());
+            Set<Integer> range = liveRanges.get(p.getKey());
             X86.Reg treg = findAssignment(availRegs,
                     preferences.get(node),
                     rangeContainsCall(func, range));
