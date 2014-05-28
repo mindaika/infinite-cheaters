@@ -1,0 +1,12 @@
+# AST Program
+ ClassDecl Test 
+  MethodDecl void main ()
+   VarDecl BoolType b ()
+   VarDecl IntType i ()
+   VarDecl IntType j ()
+   Assign b true
+   Assign i (Binop + 1 1)
+   Assign j (Binop * 3 i)
+   Print b
+   Print i
+   Print j

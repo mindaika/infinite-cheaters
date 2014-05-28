@@ -1,0 +1,42 @@
+# IR Program
+
+data _class_Body (sz=8): _Body_go
+
+_main ()
+(b)
+{
+Begin:
+ t1 = call _malloc(8)
+ [t1]:P = _class_Body
+ call _init0_Body(t1)
+ b = t1
+ t2 = [b]:P
+ t3 = [t2]:P
+ t4 = call * t3(b, 1, 2, 3)
+ call _printInt(t4)
+ return 
+End:
+}
+
+_init0_Body (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_init_Body (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_Body_go (obj, i, j, k)
+{
+Begin:
+ t1 = i + j
+ t2 = t1 + k
+ return t2
+End:
+}

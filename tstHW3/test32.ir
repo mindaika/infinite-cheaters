@@ -1,0 +1,19 @@
+# IR Program
+
+_main ()
+(i)
+{
+Begin:
+ i = 0
+ if 2 <= 1 goto L0
+ if 1 <= 0 goto L1
+ i = 1
+ goto L2
+L1:
+ i = 2
+L2:
+L0:
+ call _printInt(i)
+ return 
+End:
+}

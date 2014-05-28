@@ -1,0 +1,17 @@
+# IR Program
+
+_main ()
+(b, i, j)
+{
+Begin:
+ b = true
+ t1 = 1 + 1
+ i = t1
+ t2 = 3 * i
+ j = t2
+ call _printBool(b)
+ call _printInt(i)
+ call _printInt(j)
+ return 
+End:
+}

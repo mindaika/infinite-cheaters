@@ -1,0 +1,13 @@
+# AST Program
+ ClassDecl Test 
+  MethodDecl void main ()
+   VarDecl IntType i ()
+   VarDecl (ObjType Body) b ()
+   Assign b (NewObj Body ())
+   Assign i (Call b foo ())
+   Print i
+ ClassDecl Body 
+  VarDecl IntType x ()
+  MethodDecl IntType foo ()
+   Assign x 1
+   Return x

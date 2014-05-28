@@ -1,0 +1,12 @@
+# AST Program
+ ClassDecl Test 
+  MethodDecl void main ()
+   VarDecl (ArrayType IntType) a (NewArray IntType 2)
+   VarDecl IntType i 0
+   Assign (ArrayElm a 0) 3
+   Assign (ArrayElm a 1) 5
+   While (Binop < i 2)
+    {
+     Print (ArrayElm a i)
+     Assign i (Binop + i 1)
+    }

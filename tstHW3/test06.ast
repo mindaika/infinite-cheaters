@@ -1,0 +1,12 @@
+# AST Program
+ ClassDecl Test 
+  MethodDecl void main ()
+   VarDecl (ObjType Body) b (NewObj Body ())
+   Print (Call b go ())
+ ClassDecl Body 
+  VarDecl IntType i ()
+  MethodDecl IntType go ()
+   VarDecl IntType j ()
+   Assign i 4
+   Assign j (Binop + i 2)
+   Return j

@@ -1,0 +1,180 @@
+	.text
+	.globl _class_A
+_class_A:
+	.quad _A_foo
+	.globl _class_B
+_class_B:
+	.quad _B_foo
+    # _main ()
+    # (a, b, c)
+# Allocation map
+# t1	%rbx
+# t2	%rbp
+# t3	%rbp
+# t4	%rax
+# b	%r12
+# t5	%rax
+# c	%rbp
+# t6	%rax
+# t7	%rax
+# a	%rbx
+# t8	%rax
+# t9	%rax
+	.p2align 4,0x90
+	.globl _main
+_main:
+	pushq %rbx
+	pushq %rbp
+	pushq %r12
+    # 0.  Begin:
+F0_Begin:
+    # 1.   t1 = call _malloc(8)
+	movq $8,%rdi
+	call _malloc
+	movq %rax,%rbx
+    # 2.   [t1]:P = _class_A
+	leaq _class_A(%rip),%r10
+	movq %r10,(%rbx)
+    # 3.   call _init0_A(t1)
+	movq %rbx,%rdi
+	call _init0_A
+    # 4.   a = t1
+    # 5.   t2 = call _malloc(8)
+	movq $8,%rdi
+	call _malloc
+	movq %rax,%rbp
+    # 6.   [t2]:P = _class_B
+	leaq _class_B(%rip),%r10
+	movq %r10,(%rbp)
+    # 7.   call _init0_B(t2)
+	movq %rbp,%rdi
+	call _init0_B
+    # 8.   b = t2
+	movq %rbp,%r12
+    # 9.   t3 = call _malloc(8)
+	movq $8,%rdi
+	call _malloc
+	movq %rax,%rbp
+    # 10.  [t3]:P = _class_B
+	leaq _class_B(%rip),%r10
+	movq %r10,(%rbp)
+    # 11.  call _init0_B(t3)
+	movq %rbp,%rdi
+	call _init0_B
+    # 12.  c = t3
+    # 13.  t4 = [a]:P
+	movq (%rbx),%rax
+    # 14.  t5 = [t4]:P
+	movq (%rax),%rax
+    # 15.  call * t5(a)
+	movq %rbx,%rdi
+	call * %rax
+    # 16.  t6 = [b]:P
+	movq (%r12),%rax
+    # 17.  t7 = [t6]:P
+	movq (%rax),%rax
+    # 18.  call * t7(b)
+	movq %r12,%rdi
+	call * %rax
+    # 19.  t8 = [c]:P
+	movq (%rbp),%rax
+    # 20.  t9 = [t8]:P
+	movq (%rax),%rax
+    # 21.  call * t9(c)
+	movq %rbp,%rdi
+	call * %rax
+    # 22.  return 
+	popq %r12
+	popq %rbp
+	popq %rbx
+	ret
+    # 23. End:
+F0_End:
+    # _init0_A (obj)
+# Allocation map
+	.p2align 4,0x90
+	.globl _init0_A
+_init0_A:
+	subq $8,%rsp
+    # 0.  Begin:
+F1_Begin:
+    # 1.   return 
+	addq $8,%rsp
+	ret
+    # 2.  End:
+F1_End:
+    # _init_A (obj)
+# Allocation map
+	.p2align 4,0x90
+	.globl _init_A
+_init_A:
+	subq $8,%rsp
+    # 0.  Begin:
+F2_Begin:
+    # 1.   return 
+	addq $8,%rsp
+	ret
+    # 2.  End:
+F2_End:
+    # _A_foo (obj)
+# Allocation map
+	.p2align 4,0x90
+	.globl _A_foo
+_A_foo:
+	subq $8,%rsp
+    # 0.  Begin:
+F3_Begin:
+    # 1.   call _printStr("A")
+	leaq _S0(%rip),%rdi
+	call _printStr
+    # 2.   return 
+	addq $8,%rsp
+	ret
+    # 3.  End:
+F3_End:
+    # _init0_B (obj)
+# Allocation map
+	.p2align 4,0x90
+	.globl _init0_B
+_init0_B:
+	subq $8,%rsp
+    # 0.  Begin:
+F4_Begin:
+    # 1.   return 
+	addq $8,%rsp
+	ret
+    # 2.  End:
+F4_End:
+    # _init_B (obj)
+# Allocation map
+	.p2align 4,0x90
+	.globl _init_B
+_init_B:
+	subq $8,%rsp
+    # 0.  Begin:
+F5_Begin:
+    # 1.   return 
+	addq $8,%rsp
+	ret
+    # 2.  End:
+F5_End:
+    # _B_foo (obj)
+# Allocation map
+	.p2align 4,0x90
+	.globl _B_foo
+_B_foo:
+	subq $8,%rsp
+    # 0.  Begin:
+F6_Begin:
+    # 1.   call _printStr("B")
+	leaq _S1(%rip),%rdi
+	call _printStr
+    # 2.   return 
+	addq $8,%rsp
+	ret
+    # 3.  End:
+F6_End:
+_S0:
+	.asciz "A"
+_S1:
+	.asciz "B"

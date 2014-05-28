@@ -1,0 +1,89 @@
+# IR Program
+
+data _class_A (sz=16): _A_foo, _A_bar
+data _class_B (sz=16): _A_foo, _A_bar
+
+_main ()
+(a, b)
+{
+Begin:
+ t1 = call _malloc(16)
+ [t1]:P = _class_A
+ call _init0_A(t1)
+ a = t1
+ t2 = call _malloc(20)
+ [t2]:P = _class_B
+ call _init0_B(t2)
+ b = t2
+ t3 = [a]:P
+ t4 = [t3]:P
+ call * t4(a)
+ 8[b]:I = 10
+ 12[b]:I = 11
+ t5 = [b]:P
+ t6 = [t5]:P
+ call * t6(b)
+ return 
+End:
+}
+
+_init0_A (obj)
+{
+Begin:
+ 8[obj]:I = 1
+ t7 = 8[obj]:I
+ t8 = t7 + 1
+ 12[obj]:I = t8
+ return 
+End:
+}
+
+_init_A (obj, i, j)
+{
+Begin:
+ 8[obj]:I = i
+ 12[obj]:I = j
+ return 
+End:
+}
+
+_A_foo (obj)
+{
+Begin:
+ t1 = [obj]:P
+ t2 = 8[t1]:P
+ call * t2(obj)
+ return 
+End:
+}
+
+_A_bar (obj)
+{
+Begin:
+ t1 = 8[obj]:I
+ call _printInt(t1)
+ return 
+End:
+}
+
+_init0_B (obj)
+{
+Begin:
+ 8[obj]:I = 1
+ t2 = 8[obj]:I
+ t3 = t2 + 1
+ 12[obj]:I = t3
+ 16[obj]:I = 10
+ return 
+End:
+}
+
+_init_B (obj, i, j, k)
+{
+Begin:
+ 8[obj]:I = i
+ 12[obj]:I = j
+ 16[obj]:I = k
+ return 
+End:
+}

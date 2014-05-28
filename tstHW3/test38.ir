@@ -1,0 +1,105 @@
+# IR Program
+
+data _class_A (sz=8): _A_selectionSort
+
+_main ()
+(a, numbers, cnt)
+{
+Begin:
+ t1 = call _malloc(8)
+ [t1]:P = _class_A
+ call _init0_A(t1)
+ a = t1
+ t2 = call _malloc(40)
+ numbers = t2
+ cnt = 0
+L0:
+ if cnt >= 10 goto L1
+ t3 = 10 - cnt
+ t4 = cnt * 4
+ t5 = numbers + t4
+ [t5]:I = t3
+ t6 = cnt + 1
+ cnt = t6
+ goto L0
+L1:
+ t7 = [a]:P
+ t8 = [t7]:P
+ call * t8(a, numbers, cnt)
+ call _printStr("Your numbers in sorted order are:")
+ cnt = 0
+L2:
+ if cnt >= 10 goto L3
+ t9 = cnt * 4
+ t10 = numbers + t9
+ t11 = [t10]:I
+ call _printInt(t11)
+ t12 = cnt + 1
+ cnt = t12
+ goto L2
+L3:
+ return 
+End:
+}
+
+_init0_A (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_init_A (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_A_selectionSort (obj, A, count)
+(temp, i, j, k)
+{
+Begin:
+ t1 = count - 1
+ i = t1
+L4:
+ if i < 0 goto L5
+ j = 0
+ k = 0
+L6:
+ if j > i goto L7
+ t2 = j * 4
+ t3 = A + t2
+ t4 = [t3]:I
+ t5 = k * 4
+ t6 = A + t5
+ t7 = [t6]:I
+ if t4 <= t7 goto L8
+ k = j
+L8:
+ t8 = j + 1
+ j = t8
+ goto L6
+L7:
+ if k == i goto L9
+ t9 = k * 4
+ t10 = A + t9
+ t11 = [t10]:I
+ temp = t11
+ t12 = i * 4
+ t13 = A + t12
+ t14 = [t13]:I
+ t15 = k * 4
+ t16 = A + t15
+ [t16]:I = t14
+ t17 = i * 4
+ t18 = A + t17
+ [t18]:I = temp
+L9:
+ t19 = i - 1
+ i = t19
+ goto L4
+L5:
+ return 
+End:
+}

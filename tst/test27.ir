@@ -1,0 +1,62 @@
+# IR Program
+
+data _class_A (sz=0): 
+data _class_B (sz=0): 
+
+_main ()
+(x, y)
+{
+Begin:
+ t1 = call _malloc(20)
+ [t1]:P = _class_A
+ call _init0_A(t1)
+ x = t1
+ t2 = call _malloc(16)
+ [t2]:P = _class_B
+ call _init0_B(t2)
+ y = t2
+ t3 = 8[x]:I
+ call _printInt(t3)
+ t4 = 8[y]:P
+ t5 = 8[t4]:I
+ call _printInt(t5)
+ return 
+End:
+}
+
+_init0_A (obj)
+{
+Begin:
+ 8[obj]:I = 1
+ 12[obj]:P = 0
+ return 
+End:
+}
+
+_init_A (obj, i, b)
+{
+Begin:
+ 8[obj]:I = i
+ 12[obj]:P = b
+ return 
+End:
+}
+
+_init0_B (obj)
+{
+Begin:
+ t6 = call _malloc(20)
+ [t6]:P = _class_A
+ call _init0_A(t6)
+ 8[obj]:P = t6
+ return 
+End:
+}
+
+_init_B (obj, a)
+{
+Begin:
+ 8[obj]:P = a
+ return 
+End:
+}

@@ -1,0 +1,52 @@
+# IR Program
+
+data _class_A (sz=8): _A_go
+
+_main ()
+(a)
+{
+Begin:
+ t1 = call _malloc(8)
+ [t1]:P = _class_A
+ call _init0_A(t1)
+ a = t1
+ t2 = [a]:P
+ t3 = [t2]:P
+ t4 = call * t3(a)
+ call _printInt(t4)
+ return 
+End:
+}
+
+_init0_A (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_init_A (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_A_go (obj)
+{
+Begin:
+ if 1 >= 2 goto L0
+ call _printInt(1)
+ goto L1
+L0:
+ t1 = 3 * 4
+ if t1 != 10 goto L2
+ call _printInt(4)
+ goto L3
+L2:
+ call _printInt(5)
+L3:
+L1:
+ return 6
+End:
+}

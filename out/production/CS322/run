@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Script for running X86Gen tests.
+#
+# Usage:
+#   ./run tst/test01.java      -- test a single program 
+#   ./run tst/test*.java       -- test all programs
+#
+# The script will show diffs between the generated .s file 
+# and a reference version, and similarly for the output of the
+# generated code. If it runs in silence, it means a perfect match.
+# If there is no reference version, one is created for use next time.
+#
+for i
+do
+	d=`dirname $i`
+	f=`basename $i .ir`
+	echo $d/$f:
+	java -ea X86Gen $d/$f.ir 1> $d/$f.s || continue 1
+	if [ -r $d/$f.s.ref ]; then diff -w $d/$f.s.ref $d/$f.s; else cp $d/$f.s $d/$f.s.ref; fi
+	gcc -o $d/$f $d/$f.s lib.c
+# on MacOS add following flags to previous line: -Wl,-no_pie
+	$d/$f > $d/$f.out
+	if [ -r $d/$f.out.ref ]; then diff $d/$f.out.ref $d/$f.out; else cp $d/$f.out $d/$f.out.ref; fi
+done
+exit 0

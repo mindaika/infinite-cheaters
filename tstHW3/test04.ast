@@ -1,0 +1,9 @@
+# AST Program
+ ClassDecl Test 
+  MethodDecl void main ()
+   VarDecl (ObjType Body) b (NewObj Body ())
+   VarDecl IntType i 2
+   Assign (Field b i)  3
+   Print (Binop + i (Field b i) )
+ ClassDecl Body 
+  VarDecl IntType i ()

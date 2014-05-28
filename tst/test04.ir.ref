@@ -1,0 +1,12 @@
+# IR Program
+
+_main ()
+(i, j)
+{
+Begin:
+ i = 2
+ j = i
+ call _printInt(j)
+ return 
+End:
+}
