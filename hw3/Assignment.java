@@ -23,10 +23,7 @@ class Assignment {
         // Create a Register Interference graph
         // As per MyGraph, a Map of X86.Regs and all of their neighbors
         MyGraph iG = new MyGraph();
-        // This is Yadala's Graph. Maybe it'll work, maybe not.
-//        Graph otherGraph = new Graph();
         Set<X86.Reg> regHashSet = new HashSet<>();
-//        Stack<IR.Reg> irRegisterStack = new Stack<>();
         Stack<Map.Entry> monoStack = new Stack<>();
         //System.out.println(iG.edgesOf(2));
 //
@@ -36,7 +33,6 @@ class Assignment {
 //        // try to use it again, so we will very quickly run out.
 //
 //        // Keep track of available registers
-//        Set<X86.Reg> availableRegs = new HashSet<X86.Reg>();
 //        // start by assuming all registers are available
         for (X86.Reg r : X86.allRegs) {
             regHashSet.add(r);
@@ -76,6 +72,7 @@ class Assignment {
                 }
             }
         }
+        iG.printGraph();
 
         // TODO: Sort the regKEy list by size
         // Whilst ye olde Graph isn't not non-empty
@@ -95,14 +92,9 @@ class Assignment {
                 iG.removeNode((IR.Reg) killNode.getKey());
             }
         }
-        // Of note: this differs somewhat from the hw instructions. I used the graph-coloring algorithm, which simply
-        // calls for the current Node to be of a smaller degree than the available registers, rather than the minimum
-        // degree node. While this may change the order in which the registers are allocated, it should not change the
-        // final effect.
 
         while (!monoStack.empty()) {
             Map.Entry p = monoStack.pop();
-//            IR.Reg r = (IR.Reg)p.getKey();
             IR.Reg node = (IR.Reg) p.getKey();
             // TODO: Something about this unchecked cast
             HashSet<IR.Reg> neighbors = (HashSet<IR.Reg>) p.getValue();
@@ -126,40 +118,6 @@ class Assignment {
 //          DEBUG
             System.err.println("allocating " + node + " to " + treg);
         }
-
-//        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
-//            IR.Reg r = me.getKey();
-//            Map.Entry p = monoStack.pop();
-//            IR.Reg node = (IR.Reg)p.getKey();
-//            // TODO: Something about this unchecked cast
-//            ArrayList<IR.Reg> neighbors = (ArrayList<IR.Reg>)p.getValue();
-//            Set<X86.Reg> availRegs = new HashSet<>();
-//            availRegs.addAll(registerDeque);
-//            for (IR.Reg j : neighbors ) {
-//                availRegs.remove(env.get(j));
-//            }
-////            System.out.println("Debug");
-//
-//            Set<Integer> range = liveRanges.get((IR.Reg)monoStack.pop().getKey());
-////            Set<Integer> range = me.getValue();
-//            // Probably not what we want
-////            X86.Reg treg = registerDeque.removeFirst();
-//            X86.Reg treg = findAssignment(availRegs,
-//                    preferences.get(r),
-//                    rangeContainsCall(func, range));
-//            if (treg == null) {
-//                // couldn't find a register
-//                System.err.println("oops: out of registers");
-//                assert (false);
-//            }
-//            // We found a register; mark it as unavailable and record assignment
-//            registerDeque.remove(treg);
-//            env.put(r, treg);
-////            registerDeque.addLast(treg);
-////            DEBUG
-////            System.err.println("allocating " + r + " to " + treg);
-//        }
-
         // TODO: ... TO HERE
 
         // For documentation purposes
