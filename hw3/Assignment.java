@@ -18,13 +18,13 @@ class Assignment {
         // Calculate live ranges
         Map<IR.Reg, Set<Integer>> liveRanges = Liveness.calculateLiveRanges(liveOutSets);
 
-        // TODO: REPLACE FROM HERE ....
+        // REPLACE FROM HERE ....
 
         // Create a Register Interference graph
         // As per Graph, a Map of X86.Regs and all of their neighbors
-        Graph iG = new Graph();
-        Set<X86.Reg> regHashSet = new HashSet<>();
-        Stack<Map.Entry> monoStack = new Stack<>();
+        Graph interferenceGraph = new Graph(liveRanges);
+        Set<X86.Reg> registerSetX86 = new HashSet<>();
+        Stack<Map.Entry> registerStack = new Stack<>();
 //
 //
 //        // For now, do extremely simplistic allocation: simply allocate registers to
@@ -33,15 +33,15 @@ class Assignment {
 //
 //        // Keep track of available registers
 //        // start by assuming all registers are available
-        Collections.addAll(regHashSet, X86.allRegs);
+        Collections.addAll(registerSetX86, X86.allRegs);
 //        for (X86.Reg r : X86.allRegs) {
 //            regHashSet.add(r);
 //        }
 
         // always rule out special-purpose registers
-        regHashSet.remove(X86.RSP);
-        regHashSet.remove(IR.tempReg1);
-        regHashSet.remove(IR.tempReg2);
+        registerSetX86.remove(X86.RSP);
+        registerSetX86.remove(IR.tempReg1);
+        registerSetX86.remove(IR.tempReg2);
 
         // Print info about LiveRanges
 //        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
@@ -51,36 +51,36 @@ class Assignment {
 
         // To build graph:
         // 1. Add Nodes for every entry in the liveRanges set
-        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
-            iG.addNode(me.getKey());
-        }
+//        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
+//            iG.addNode(me.getKey());
+//        }
 
         // 2. For every entry in the liveRanges set, find all other entries that have a common value
         // and create an edge between those two entries as nodes
         // For each map entry
-        for (Map.Entry<IR.Reg, Set<Integer>> j : liveRanges.entrySet()) {
-            // For every integer in that map entry
-            for (Integer i : j.getValue()) {
-                // Compare i to every other integer in every other entry
-                // Algorithmic efficiency at its finest
-                for (Map.Entry<IR.Reg, Set<Integer>> k : liveRanges.entrySet()) {
-                    for (Integer p : k.getValue()) {
-                        if (p.equals(i) && j != k) {
-                            iG.addEdge(j.getKey(), k.getKey());
-                        }
-                    }
-                }
-            }
-        }
+        // In OOD world, this probably belongs in the Graph class
+//        for (Map.Entry<IR.Reg, Set<Integer>> j : liveRanges.entrySet()) {
+//            // For every integer in that map entry
+//            for (Integer i : j.getValue()) {
+//                // Compare i to every other integer in every other entry
+//                // Algorithmic efficiency at its finest
+//                for (Map.Entry<IR.Reg, Set<Integer>> k : liveRanges.entrySet()) {
+//                    for (Integer p : k.getValue()) {
+//                        if (p.equals(i) && j != k) {
+//                            iG.addEdge(j.getKey(), k.getKey());
+//                        }
+//                    }
+//                }
+//            }
+//        }
 //        iG.printGraph();
 
-        // TODO: Sort the regKEy list by size
         // Whilst ye olde Graph isn't not non-empty
         // Choose a node of appropriateness
-        while (!iG.getGraph().isEmpty()) {
+        while (!interferenceGraph.getGraph().isEmpty()) {
             Map.Entry killNode = null;
-            int smallestSize = regHashSet.size();
-            for (Map.Entry regKey : iG.getGraph().entrySet()) {
+            int smallestSize = registerSetX86.size();
+            for (Map.Entry regKey : interferenceGraph.getGraph().entrySet()) {
                 // Find minimum node and ensure it still works
                 if ((((Set) regKey.getValue()).size() <= smallestSize)) {
                     killNode = regKey;
@@ -88,18 +88,19 @@ class Assignment {
                 }
             }
             if (killNode != null) {
-                monoStack.push(killNode);
-                iG.removeNode((IR.Reg) killNode.getKey());
+                registerStack.push(killNode);
+                interferenceGraph.removeNode((IR.Reg) killNode.getKey());
             }
         }
 
-        while (!monoStack.empty()) {
-            Map.Entry p = monoStack.pop();
+        while (!registerStack.empty()) {
+            Map.Entry p = registerStack.pop();
             IR.Reg node = (IR.Reg) p.getKey();
-            // TODO: Something about this unchecked cast
+            // As per the intertubes, the real solution is "Write to Oracle and demand reified generics"
+            @SuppressWarnings("unchecked")
             HashSet<IR.Reg> neighbors = HashSet.class.cast(p.getValue());
             Set<X86.Reg> availRegs = new HashSet<>();
-            availRegs.addAll(regHashSet);
+            availRegs.addAll(registerSetX86);
             for (IR.Reg j : neighbors) {
                 availRegs.remove(env.get(j));
             }
@@ -118,7 +119,7 @@ class Assignment {
 //          DEBUG
 //            System.err.println("allocating " + node + " to " + treg);
         }
-        // TODO: ... TO HERE
+        // ... TO HERE
 
         // For documentation purposes
         System.out.println("# Allocation map");

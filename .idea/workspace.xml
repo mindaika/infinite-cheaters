@@ -2,66 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5b6d9a59-e205-435f-a676-a1faff6c17f7" name="Default" comment="More cleanup&#10;&#10;">
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\Assignment.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$1.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Addr.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$ArithOP.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$BOP.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Binop.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$BoolLit.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$CJump.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Call.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$CallTgt.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Const.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Data.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Dest.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Func.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Global.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Id.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Inst.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$IntLit.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Jump.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Label.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$LabelDec.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Load.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Move.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Operand.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Program.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Reg.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$RelOP.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Return.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Src.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Store.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$StrLit.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Temp.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Type.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$UOP.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR$Unop.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\IR.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\Liveness$Interval.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\Liveness.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\ParseException.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\SimpleCharStream.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\Token.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\TokenMgrError.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$AddrName.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$GLabel.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$Imm.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$Label.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$Mem.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$Operand.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$ParallelMover.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$Reg.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86$Size.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\X86Gen.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\irParser$1.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\irParser$JJCalls.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\irParser$LookaheadSuccess.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\irParser.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\irParserConstants.class" afterPath="" />
-      <change type="DELETED" beforePath="F:\Projects\infinite-cheaters\hw3\irParserTokenManager.class" afterPath="" />
+      <change type="DELETED" beforePath="C:\Projects\infinite-cheaters\.idea\libraries\JavaLibs.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/Assignment.java" afterPath="$PROJECT_DIR$/hw3/Assignment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/Graph.java" afterPath="$PROJECT_DIR$/hw3/Graph.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="CS322.iws" />
@@ -79,30 +25,60 @@
   <component name="DaemonCodeAnalyzer">
     <disable_hints />
   </component>
+  <component name="DebuggerManager">
+    <breakpoint_any converted="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <ui_properties converted="true" />
+    <breakpoint_rules converted="true" />
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="CS322" />
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Assignment.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Assignment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hw3/Assignment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2774755" vertical-offset="1377" max-vertical-offset="3604">
-              <caret line="96" column="40" selection-start-line="96" selection-start-column="40" selection-end-line="96" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="3621">
+              <caret line="113" column="61" selection-start-line="113" selection-start-column="61" selection-end-line="113" selection-end-column="61" />
               <folding>
-                <element signature="e#307#324#0" expanded="true" />
+                <element signature="e#4055#4085#1" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Liveness.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hw3/Liveness.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1122" max-vertical-offset="2176">
-              <caret line="66" column="53" selection-start-line="66" selection-start-column="34" selection-end-line="66" selection-end-column="53" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -137,11 +113,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Graph.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Graph.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw3/Graph.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="697" max-vertical-offset="1156">
-              <caret line="41" column="5" selection-start-line="0" selection-start-column="17" selection-end-line="41" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.48870638" vertical-offset="0" max-vertical-offset="1360">
+              <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -160,8 +136,8 @@
       <file leaf-file-name="IR.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hw3/IR.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="15079" max-vertical-offset="17935">
-              <caret line="887" column="0" selection-start-line="887" selection-start-column="0" selection-end-line="887" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2762" max-vertical-offset="16762">
+              <caret line="197" column="31" selection-start-line="197" selection-start-column="31" selection-end-line="197" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -209,8 +185,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1616" />
+    <option name="height" value="876" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -223,7 +199,18 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="0" />
+    <option name="STATE" value="2" />
+  </component>
+  <component name="ProjectStructureProblems">
+    <ignored-problems>
+      <problem id="library-invalid-classes-path(library:project:JavaLibs)" />
+      <problem id="unused-library(library:project:CS322)" />
+      <problem id="unused-library(library:project:IRInterp)" />
+      <problem id="unused-library(library:project:IRInterp1)" />
+      <problem id="unused-library(library:project:IRInterp2)" />
+      <problem id="unused-library(library:project:JavaLibs)" />
+      <problem id="unused-library(library:project:submit)" />
+    </ignored-problems>
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -238,22 +225,18 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="CS322" />
+              <option name="myItemId" value="infinite-cheaters" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="CS322" />
+              <option name="myItemId" value="infinite-cheaters" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -263,7 +246,7 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="CS322" />
+              <option name="myItemId" value="infinite-cheaters" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -277,32 +260,26 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="GoToClass.includeLibraries" value="false" />
-    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="GoToClass.includeLibraries" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="recentsLimit" value="5" />
-    <property name="restartRequiresConfirmation" value="false" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="FullScreen" value="false" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="options.lastSelected" value="Template Data Languages" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="LayoutCode.rearrangeEntriesJava" value="false" />
-    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
-    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
-    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
-    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
-    <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
-    <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
-    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="cs322" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../JavaLibs" />
+    <property name="recentsLimit" value="5" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -448,14 +425,14 @@
     <configuration default="false" name="HW3" type="Application" factoryName="Application" singleton="true">
       <option name="MAIN_CLASS_NAME" value="X86Gen" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="F:\Projects\infinite-cheaters\tstHW3\test26.ir" />
+      <option name="PROGRAM_PARAMETERS" value="C:\Projects\infinite-cheaters\tstHW3\test24.ir" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="CS322" />
+      <module name="infinite-cheaters" />
       <envs />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />
@@ -480,7 +457,7 @@
     <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
   </component>
   <component name="SvnConfiguration">
-    <configuration />
+    <configuration>C:\Users\Randall\AppData\Roaming\Subversion</configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -588,7 +565,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -601,19 +578,19 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5007874" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3285528" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25208333" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.4992126" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3285528" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -733,22 +710,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/hw3/IR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="15079" max-vertical-offset="17935">
-          <caret line="887" column="0" selection-start-line="887" selection-start-column="0" selection-end-line="887" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw3/X86Gen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hw2/ir/IR.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3400" max-vertical-offset="8296">
@@ -1042,14 +1003,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw3/IR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="13896" max-vertical-offset="16830">
-          <caret line="887" column="0" selection-start-line="887" selection-start-column="0" selection-end-line="887" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hw3/X86Gen.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="493">
@@ -1082,14 +1035,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw3/Graph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1020">
-          <caret line="41" column="5" selection-start-line="0" selection-start-column="17" selection-end-line="41" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2889" max-vertical-offset="3808">
@@ -1098,13 +1043,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tstHW3/test48.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="442">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tst/test03.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.046008117" vertical-offset="0" max-vertical-offset="739">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw3/IR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2762" max-vertical-offset="16762">
+          <caret line="197" column="31" selection-start-line="197" selection-start-column="31" selection-end-line="197" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/hw3/Assignment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2774755" vertical-offset="1377" max-vertical-offset="3604">
-          <caret line="96" column="40" selection-start-line="96" selection-start-column="40" selection-end-line="96" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="3621">
+          <caret line="113" column="61" selection-start-line="113" selection-start-column="61" selection-end-line="113" selection-end-column="61" />
           <folding>
-            <element signature="e#307#324#0" expanded="true" />
+            <element signature="e#4055#4085#1" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw3/Graph.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48870638" vertical-offset="0" max-vertical-offset="1360">
+          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1160,7 +1137,19 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>CS322</last-edited>
+          <last-edited>hw1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1172,7 +1161,18 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>JavaLibs</last-edited>
+          <last-edited>CS322</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
           <splitter-proportions>
             <option name="proportions">
               <list>

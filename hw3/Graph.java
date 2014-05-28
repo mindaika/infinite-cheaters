@@ -13,6 +13,29 @@ public class Graph {
         this.undirectedGraph = new HashMap<>();
     }
 
+    public Graph(Map<IR.Reg, Set<Integer>> input) {
+        this.undirectedGraph = new HashMap<>();
+
+        for (Map.Entry<IR.Reg, Set<Integer>> me : input.entrySet()) {
+            this.addNode(me.getKey());
+        }
+
+        for (Map.Entry<IR.Reg, Set<Integer>> j : input.entrySet()) {
+            // For every integer in that map entry
+            for (Integer i : j.getValue()) {
+                // Compare i to every other integer in every other entry
+                // Algorithmic efficiency at its finest
+                for (Map.Entry<IR.Reg, Set<Integer>> k : input.entrySet()) {
+                    for (Integer p : k.getValue()) {
+                        if (p.equals(i) && j != k) {
+                            this.addEdge(j.getKey(), k.getKey());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void addNode(IR.Reg node) {
         undirectedGraph.put(node, new HashSet<IR.Reg>());
     }
