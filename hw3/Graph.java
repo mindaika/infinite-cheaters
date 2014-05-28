@@ -6,10 +6,10 @@ import java.util.Set;
 /**
  * Created by Randall on 5/25/2014.
  */
-public class MyGraph {
+public class Graph {
     private Map<IR.Reg, Set<IR.Reg>> undirectedGraph;
 
-    public MyGraph() {
+    public Graph() {
         this.undirectedGraph = new HashMap<>();
     }
 

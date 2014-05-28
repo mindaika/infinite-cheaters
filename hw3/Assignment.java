@@ -21,8 +21,8 @@ class Assignment {
         // TODO: REPLACE FROM HERE ....
 
         // Create a Register Interference graph
-        // As per MyGraph, a Map of X86.Regs and all of their neighbors
-        MyGraph iG = new MyGraph();
+        // As per Graph, a Map of X86.Regs and all of their neighbors
+        Graph iG = new Graph();
         Set<X86.Reg> regHashSet = new HashSet<>();
         Stack<Map.Entry> monoStack = new Stack<>();
 //
