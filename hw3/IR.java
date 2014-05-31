@@ -379,10 +379,35 @@ class IR {
                             || ((IntLit) ((Binop) code[i]).src2).i == 4
                             || ((IntLit) ((Binop) code[i]).src2).i == 8
                     ))
-                            && (code[i + 1] != null)
-                            && (code[i + 1] instanceof Reg)) // TODO: Uh..... figure this shit out
+                            && (code[i + 1] instanceof Binop)
+                            && (code[i + 2] != null)
+                            && (code[i + 2] instanceof Load)
+                            || (code[i + 2] instanceof Store)
+                            )
                     {
-                        System.err.println(((Binop) code[i]).src1 + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2);
+                        // An IR.Temp scaled
+                        Src temp1 = (((Binop) code[i]).src1);
+//                        System.err.println("tempAddr1=" + tempAddr1.toString());
+
+
+                        // A base address and an offset
+
+                        // A Load
+//                        IR.Addr tempAddr2 = new Addr(((Binop) code[i+1]).src1, tempAddr1.base);
+//                        System.err.println(tempAddr2);
+//                        IR.Id tempID1 = ((Binop)code[i]).src1 * ((IntLit) ((Binop) code[i]).src2).i;
+                        System.err.println("First: " + ((Binop) code[i]).src1.getClass() + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2.getClass());
+                        System.err.println("Second: " + ((Binop) code[i + 1]).src1.getClass() + ((Binop) code[i + 1]).op.toString() + ((Binop) code[i + 1]).src2.getClass());
+                        System.err.println(((Binop) code[i]).);
+                        IR.Operand address = new Addr(((Binop) code[i + 1]).src1, 4);
+                        IR.Operand destination;
+                        if (code[i + 2] instanceof Load) {
+                            destination = ((Load) code[i + 2]).dst;
+                        } else if (code[i + 2] instanceof Store) {
+                            destination = ((Store) code[i + 2]).addr.base;
+                        }
+                        X86.emit2("movslq", address, destination);
+
                     }
                 }
             }
@@ -523,17 +548,13 @@ class IR {
             return line(true, " " + dst + " = " + src1 + " " + op + " " + src2 + "\n");
         }
 
+        @Override
         void gen() {
             if (op instanceof ArithOP) {
                 switch ((ArithOP) op) {
                     case ADD:
                     case SUB:
-                    case MUL: {
-                        /*if (src1 instanceof IR.Reg && src2 instanceof IntLit && (((IntLit) src2).i % 4 == 0)) {
-                            System.err.println(src1 + op.toString() + src2);
-                            X86.Reg mdest = dst.gen_dest_operand(); // TODO: ...
-                        }*/
-                    }
+                    case MUL:
                     case AND:
                     case OR: {
                         X86.Reg mdest = dst.gen_dest_operand();
