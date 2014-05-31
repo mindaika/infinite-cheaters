@@ -1,7 +1,7 @@
 import java.util.*;
 
 /**
- * Simplistic register assignment *
+ * Complicated register assignment *
  */
 class Assignment {
 
@@ -21,7 +21,7 @@ class Assignment {
         // REPLACE FROM HERE ....
 
         // Create a Register Interference graph
-        // As per Graph, a Map of X86.Regs and all of their neighbors
+        // As per Graph, a Map of IR.Regs and all of their neighbors
         Graph interferenceGraph = new Graph(liveRanges);
         Set<X86.Reg> registerSetX86 = new HashSet<>();
         Stack<Map.Entry> registerStack = new Stack<>();
@@ -34,46 +34,11 @@ class Assignment {
 //        // Keep track of available registers
 //        // start by assuming all registers are available
         Collections.addAll(registerSetX86, X86.allRegs);
-//        for (X86.Reg r : X86.allRegs) {
-//            regHashSet.add(r);
-//        }
 
         // always rule out special-purpose registers
         registerSetX86.remove(X86.RSP);
         registerSetX86.remove(IR.tempReg1);
         registerSetX86.remove(IR.tempReg2);
-
-        // Print info about LiveRanges
-//        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
-//            System.out.println("DEBUG:");
-//            System.out.println(me.getKey() + ": " + me.getValue().toString() + "\n");
-//        }
-
-        // To build graph:
-        // 1. Add Nodes for every entry in the liveRanges set
-//        for (Map.Entry<IR.Reg, Set<Integer>> me : liveRanges.entrySet()) {
-//            iG.addNode(me.getKey());
-//        }
-
-        // 2. For every entry in the liveRanges set, find all other entries that have a common value
-        // and create an edge between those two entries as nodes
-        // For each map entry
-        // In OOD world, this probably belongs in the Graph class
-//        for (Map.Entry<IR.Reg, Set<Integer>> j : liveRanges.entrySet()) {
-//            // For every integer in that map entry
-//            for (Integer i : j.getValue()) {
-//                // Compare i to every other integer in every other entry
-//                // Algorithmic efficiency at its finest
-//                for (Map.Entry<IR.Reg, Set<Integer>> k : liveRanges.entrySet()) {
-//                    for (Integer p : k.getValue()) {
-//                        if (p.equals(i) && j != k) {
-//                            iG.addEdge(j.getKey(), k.getKey());
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        iG.printGraph();
 
         // Whilst ye olde Graph isn't not non-empty
         // Choose a node of appropriateness
@@ -82,7 +47,7 @@ class Assignment {
             int smallestSize = registerSetX86.size();
             for (Map.Entry regKey : interferenceGraph.getGraph().entrySet()) {
                 // Find minimum node and ensure it still works
-                if ((((Set) regKey.getValue()).size() <= smallestSize)) {
+                if ((((Set) regKey.getValue()).size() < smallestSize)) {
                     killNode = regKey;
                     smallestSize = ((Set) regKey.getValue()).size();
                 }
@@ -104,7 +69,6 @@ class Assignment {
             for (IR.Reg j : neighbors) {
                 availRegs.remove(env.get(j));
             }
-//            System.out.println("Debug");
             Set<Integer> range = liveRanges.get(p.getKey());
             X86.Reg treg = findAssignment(availRegs,
                     preferences.get(node),
