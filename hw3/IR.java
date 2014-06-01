@@ -379,35 +379,21 @@ class IR {
                             || ((IntLit) ((Binop) code[i]).src2).i == 4
                             || ((IntLit) ((Binop) code[i]).src2).i == 8
                     ))
+                            && (code[i + 2] != null) // If no i+2, no i+1, so no need to check i+1
                             && (code[i + 1] instanceof Binop)
-                            && (code[i + 2] != null)
                             && (code[i + 2] instanceof Load)
                             || (code[i + 2] instanceof Store)
                             )
                     {
-                        // An IR.Temp scaled
-                        Src temp1 = (((Binop) code[i]).src1);
-//                        System.err.println("tempAddr1=" + tempAddr1.toString());
-
-
-                        // A base address and an offset
-
-                        // A Load
-//                        IR.Addr tempAddr2 = new Addr(((Binop) code[i+1]).src1, tempAddr1.base);
-//                        System.err.println(tempAddr2);
-//                        IR.Id tempID1 = ((Binop)code[i]).src1 * ((IntLit) ((Binop) code[i]).src2).i;
-                        System.err.println("First: " + ((Binop) code[i]).src1.getClass() + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2.getClass());
-                        System.err.println("Second: " + ((Binop) code[i + 1]).src1.getClass() + ((Binop) code[i + 1]).op.toString() + ((Binop) code[i + 1]).src2.getClass());
-                        System.err.println(((Binop) code[i]).);
-                        IR.Operand address = new Addr(((Binop) code[i + 1]).src1, 4);
-                        IR.Operand destination;
-                        if (code[i + 2] instanceof Load) {
-                            destination = ((Load) code[i + 2]).dst;
-                        } else if (code[i + 2] instanceof Store) {
-                            destination = ((Store) code[i + 2]).addr.base;
+//                        System.err.println("First: " + ((Binop) code[i]).src1.getClass() + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2.getClass());
+//                        System.err.println("Second: " + ((Binop) code[i + 1]).src1.getClass() + ((Binop) code[i + 1]).op.toString() + ((Binop) code[i + 1]).src2.getClass());
+//                        System.err.println(((Binop) code[i+2]));
+//                        int offset = 2 * ((IntLit) ((Binop)code[i]).src2).i;
+                        IR.Addr newAddr = new Addr(((Binop) code[i + 1]).src1, ((IntLit) ((Binop) code[i]).src2).i);
+                        if (code[i + 2] instanceof IR.Load) {
+                            code[i + 2] = new Load(((Load) code[i + 2]).type, ((Load) code[i + 2]).dst, newAddr);
+                            System.err.println("ERR it goes");
                         }
-                        X86.emit2("movslq", address, destination);
-
                     }
                 }
             }
