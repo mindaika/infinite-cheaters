@@ -1,0 +1,11 @@
+# IR Program
+
+_main ()
+{
+Begin:
+ call _printInt(123)
+ call _print()
+ call _printBool(true)
+ return 
+End:
+}

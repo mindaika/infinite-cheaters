@@ -1,0 +1,28 @@
+# IR Program
+
+_main ()
+(a, i)
+{
+Begin:
+ t1 = call _malloc(8)
+ a = t1
+ i = 0
+ t2 = 0 * 4
+ t3 = a + t2
+ [t3]:I = 3
+ t4 = 1 * 4
+ t5 = a + t4
+ [t5]:I = 5
+L0:
+ if i >= 2 goto L1
+ t6 = i * 4
+ t7 = a + t6
+ t8 = [t7]:I
+ call _printInt(t8)
+ t9 = i + 1
+ i = t9
+ goto L0
+L1:
+ return 
+End:
+}

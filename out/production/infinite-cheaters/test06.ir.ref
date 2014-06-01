@@ -1,0 +1,16 @@
+# IR Program
+
+_main ()
+(flag)
+{
+Begin:
+ flag = true
+L0:
+ if flag == false goto L1
+ flag = false
+ goto L0
+L1:
+ call _printStr("done")
+ return 
+End:
+}

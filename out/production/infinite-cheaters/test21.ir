@@ -1,0 +1,47 @@
+# IR Program
+
+data _class_A (sz=8): _A_foo
+
+_main ()
+(a, b, i, j)
+{
+Begin:
+ t1 = call _malloc(8)
+ [t1]:P = _class_A
+ call _init0_A(t1)
+ a = t1
+ b = true
+ t2 = [a]:P
+ t3 = [t2]:P
+ t4 = call * t3(a, 1, 2)
+ i = t4
+ t5 = 2 * 3
+ j = t5
+ call _printBool(b)
+ call _printInt(i)
+ call _printInt(j)
+ return 
+End:
+}
+
+_init0_A (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_init_A (obj)
+{
+Begin:
+ return 
+End:
+}
+
+_A_foo (obj, i, j)
+{
+Begin:
+ t1 = i + j
+ return t1
+End:
+}

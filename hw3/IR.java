@@ -385,13 +385,12 @@ class IR {
                             || (code[i + 2] instanceof Store)
                             )
                     {
-//                        System.err.println("First: " + ((Binop) code[i]).src1.getClass() + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2.getClass());
-//                        System.err.println("Second: " + ((Binop) code[i + 1]).src1.getClass() + ((Binop) code[i + 1]).op.toString() + ((Binop) code[i + 1]).src2.getClass());
-//                        System.err.println(((Binop) code[i+2]));
-//                        int offset = 2 * ((IntLit) ((Binop)code[i]).src2).i;
-                        IR.Addr newAddr = new Addr(((Binop) code[i + 1]).src1, ((IntLit) ((Binop) code[i]).src2).i);
+                        int offset = ((IntLit)((Binop)code[i]).src2).i;
                         if (code[i + 2] instanceof IR.Load) {
-                            code[i + 2] = new Load(((Load) code[i + 2]).type, ((Load) code[i + 2]).dst, newAddr);
+                            IR.Addr source = new Addr(((Binop)code[i+1]).src1, offset);
+                            IR.Dest dest = ((Load) code[i + 2]).dst;
+                            IR.Type type = ((Load) code[i + 2]).type;
+                            code[i + 2] = new Load(type, dest, source);
                             System.err.println("ERR it goes");
                         }
                     }

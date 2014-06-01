@@ -1,0 +1,17 @@
+# IR Program
+
+_main ()
+(i, j, k)
+{
+Begin:
+ i = 2
+ j = 3
+ t1 = i + j
+ k = t1
+ call _printInt(k)
+ if k != 5 goto L0
+ call _printStr("OK")
+L0:
+ return 
+End:
+}

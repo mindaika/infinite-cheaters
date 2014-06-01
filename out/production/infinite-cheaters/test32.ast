@@ -1,0 +1,10 @@
+# AST Program
+ ClassDecl Test 
+  MethodDecl void main ()
+   VarDecl IntType i 0
+   If (Binop > 2 1)
+    If (Binop > 1 0)
+     Assign i 1
+    Else
+     Assign i 2
+   Print i
