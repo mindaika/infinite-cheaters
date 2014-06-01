@@ -379,10 +379,21 @@ class IR {
                             || ((IntLit) ((Binop) code[i]).src2).i == 4
                             || ((IntLit) ((Binop) code[i]).src2).i == 8
                     ))
-                            && (code[i + 1] != null)
-                            && (code[i + 1] instanceof Reg)) // TODO: Uh..... figure this shit out
+                            && (code[i + 2] != null) // If no i+2, no i+1, so no need to check i+1
+                            && (code[i + 1] instanceof Binop)
+                            && (code[i + 2] instanceof Load)
+                            || (code[i + 2] instanceof Store)
+                            )
                     {
-                        System.err.println(((Binop) code[i]).src1 + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2);
+//                        System.err.println("First: " + ((Binop) code[i]).src1.getClass() + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2.getClass());
+//                        System.err.println("Second: " + ((Binop) code[i + 1]).src1.getClass() + ((Binop) code[i + 1]).op.toString() + ((Binop) code[i + 1]).src2.getClass());
+//                        System.err.println(((Binop) code[i+2]));
+//                        int offset = 2 * ((IntLit) ((Binop)code[i]).src2).i;
+                        IR.Addr newAddr = new Addr(((Binop) code[i + 1]).src1, ((IntLit) ((Binop) code[i]).src2).i);
+                        if (code[i + 2] instanceof IR.Load) {
+                            code[i + 2] = new Load(((Load) code[i + 2]).type, ((Load) code[i + 2]).dst, newAddr);
+                            System.err.println("ERR it goes");
+                        }
                     }
                 }
             }
@@ -523,17 +534,13 @@ class IR {
             return line(true, " " + dst + " = " + src1 + " " + op + " " + src2 + "\n");
         }
 
+        @Override
         void gen() {
             if (op instanceof ArithOP) {
                 switch ((ArithOP) op) {
                     case ADD:
                     case SUB:
-                    case MUL: {
-                        /*if (src1 instanceof IR.Reg && src2 instanceof IntLit && (((IntLit) src2).i % 4 == 0)) {
-                            System.err.println(src1 + op.toString() + src2);
-                            X86.Reg mdest = dst.gen_dest_operand(); // TODO: ...
-                        }*/
-                    }
+                    case MUL:
                     case AND:
                     case OR: {
                         X86.Reg mdest = dst.gen_dest_operand();
