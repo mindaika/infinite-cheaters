@@ -295,7 +295,6 @@ class IR {
                 i++;
             }
         }
-
     }
 
     // Operators
@@ -436,8 +435,6 @@ class IR {
 
             // emit code for the body (note that irPtr is global)
             for (irPtr = 0; irPtr < code.length; irPtr++) {
-                System.out.print("    # " + code[irPtr]);
-
                 // START
                 if (code[irPtr] instanceof Binop) {
                     if (((Binop) code[irPtr]).src1 instanceof IR.Reg
@@ -455,27 +452,29 @@ class IR {
 
                         if (code[irPtr + 2] instanceof IR.Load) {
                             // Some array index k times a scalar
-                            int offset = (env.get((Id) ((Binop) code[irPtr]).src1)).r * ((IntLit) ((Binop) code[irPtr]).src2).i;
+//                            int offset = (env.get((Id) ((Binop) code[irPtr]).src1)).s.bytes * ((IntLit) ((Binop) code[irPtr]).src2).i;
                             // Some address plus an offset
-                            int notSureWhatImDoingHere = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand().r + offset;
-//                            System.err.println(notSureWhatImDoingHere);
-                            IR.Addr source = new Addr(((Binop) code[irPtr + 1]).src1, offset);
-                            IR.Dest dest = ((Load) code[irPtr + 2]).dst;
-                            IR.Type type = ((Load) code[irPtr + 2]).type;
                             X86.Reg base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
                             X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
-                            int size = ((env.get((Id) ((Binop) code[irPtr]).src1)).s).bytes;
-                            X86.Mem anotherThing = new X86.Mem(base, index, offset, size);
-                            System.err.println(anotherThing.toString());
-                            code[irPtr + 2] = new Load(type, dest, source);
-                            code[irPtr + 2].gen();
+                            X86.Mem anotherThing = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+
+                            irPtr = irPtr + 2;
+                            System.out.print("    # " + code[irPtr]);
+                            X86.emit2("movslq", anotherThing, ((Load) code[irPtr]).dst.gen_dest_operand());
+//                            code[irPtr].gen();
+
+                        } else {
+                            System.out.print("    # " + code[irPtr]);
+                            code[irPtr].gen();
                         }
+
                     } else {
+                        System.out.print("    # " + code[irPtr]);
                         code[irPtr].gen();
                     }
                 } else {
                     //END
-
+                    System.out.print("    # " + code[irPtr]);
                     code[irPtr].gen();
                 }
             }
