@@ -370,33 +370,6 @@ class IR {
         void gen() {
             assert (code[0] instanceof LabelDec);
             assert (code[code.length - 1] instanceof LabelDec);
-            for (int i = 0; i < code.length; i++) {
-                if (code[i] instanceof Binop) {
-                    if (((Binop) code[i]).src1 instanceof IR.Reg
-                            && ((Binop) code[i]).src2 instanceof IntLit
-                            && ((((IntLit) ((Binop) code[i]).src2).i == 1
-                            || ((IntLit) ((Binop) code[i]).src2).i == 2
-                            || ((IntLit) ((Binop) code[i]).src2).i == 4
-                            || ((IntLit) ((Binop) code[i]).src2).i == 8
-                    ))
-                            && (code[i + 2] != null) // If no i+2, no i+1, so no need to check i+1
-                            && (code[i + 1] instanceof Binop)
-                            && (code[i + 2] instanceof Load)
-                            || (code[i + 2] instanceof Store)
-                            )
-                    {
-//                        System.err.println("First: " + ((Binop) code[i]).src1.getClass() + ((Binop) code[i]).op.toString() + ((Binop) code[i]).src2.getClass());
-//                        System.err.println("Second: " + ((Binop) code[i + 1]).src1.getClass() + ((Binop) code[i + 1]).op.toString() + ((Binop) code[i + 1]).src2.getClass());
-//                        System.err.println(((Binop) code[i+2]));
-//                        int offset = 2 * ((IntLit) ((Binop)code[i]).src2).i;
-                        IR.Addr newAddr = new Addr(((Binop) code[i + 1]).src1, ((IntLit) ((Binop) code[i]).src2).i);
-                        if (code[i + 2] instanceof IR.Load) {
-                            code[i + 2] = new Load(((Load) code[i + 2]).type, ((Load) code[i + 2]).dst, newAddr);
-                            System.err.println("ERR it goes");
-                        }
-                    }
-                }
-            }
 
             System.out.print("    # " + name_params_string());
             if (locals_string().length() > 0)
@@ -451,12 +424,57 @@ class IR {
                 }
             }
             new X86.ParallelMover(n, src, dst, tempReg1).move();
+            for (int i = 0; i < code.length; i++) {
+                
+            }
 
             // emit code for the body (note that irPtr is global)
             for (irPtr = 0; irPtr < code.length; irPtr++) {
                 System.out.print("    # " + code[irPtr]);
-                code[irPtr].gen();
+                
+                // START
+                if (code[irPtr] instanceof Binop) {
+                    if (((Binop) code[irPtr]).src1 instanceof IR.Reg
+                            && ((Binop) code[irPtr]).src2 instanceof IntLit
+                            && ((((IntLit) ((Binop) code[irPtr]).src2).i == 1
+                            || ((IntLit) ((Binop) code[irPtr]).src2).i == 2
+                            || ((IntLit) ((Binop) code[irPtr]).src2).i == 4
+                            || ((IntLit) ((Binop) code[irPtr]).src2).i == 8
+                    ))
+                            && (code[irPtr + 2] != null) // If no i+2, no i+1, so no need to check i+1
+                            && (code[irPtr + 1] instanceof Binop)
+                            && (code[irPtr + 2] instanceof Load)
+                            || (code[irPtr + 2] instanceof Store)
+                            )
+                    {
+
+                        if (code[irPtr + 2] instanceof IR.Load) {
+                            // Some array index k times a scalar
+                            int offset = (env.get((Id) ((Binop) code[irPtr]).src1)).r * ((IntLit) ((Binop) code[irPtr]).src2).i;
+                            // Some address plus an offset
+                            int notSureWhatImDoingHere = ((Id)((Binop)code[irPtr + 1]).src1).gen_dest_operand().r + offset;
+                            System.err.println(notSureWhatImDoingHere);
+                            IR.Addr source = new Addr(((Binop)code[irPtr + 1]).src1, offset);
+                            IR.Dest dest = ((Load) code[irPtr + 2]).dst;
+                            IR.Type type = ((Load) code[irPtr + 2]).type;
+                            X86.Reg base = ((Id) ((Binop)code[irPtr + 1]).src1).gen_dest_operand();
+                            X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
+                            int size = ((env.get((Id) ((Binop) code[irPtr]).src1)).s).bytes;
+                            X86.Mem anotherThing = new X86.Mem(base, index, offset, size);
+                            ;
+                            code[irPtr + 2] = new Load(type, dest, source);
+                            code[irPtr+2].gen();
+                        }
+                    } else {
+                        code[irPtr].gen();
+                    }
+                } else {
+                    //END
+
+                    code[irPtr].gen();
+                }
             }
+
         }
 
         // Return set of successors for each instruction in a function
