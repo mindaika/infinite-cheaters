@@ -461,9 +461,9 @@ class IR {
                             X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
                             int size = ((env.get((Id) ((Binop) code[irPtr]).src1)).s).bytes;
                             X86.Mem anotherThing = new X86.Mem(base, index, offset, size);
-                            ;
+                            System.err.println(anotherThing.toString());
                             code[irPtr + 2] = new Load(type, dest, source);
-                            code[irPtr+2].gen();
+                            code[irPtr + 2].gen();
                         }
                     } else {
                         code[irPtr].gen();
