@@ -7,3 +7,5 @@ Once I got enough guidance to begin, I started by conceptually locating series o
 After flailing around the code for a couple days (weeks), I moved my code to the end of Func.gen() so that I could use the pointer into the codelist, rather than the list itself. This movement also allowed me to use the now generated X86 registers to compact the call. 
 
 The actual improvement of the Load is relatively simple, once I figured it out: Create a new Mem call with the base (A in the example), the index (j) and the offset (4 * j) and call the emit2 function with the new memCall and the Load destination register, then increment the pointer to skip the unused instructions. 
+
+Based on the wording of the instructions, and a conversation with Prof Jones, it appears we may not need to handle the IR.Store condition.
