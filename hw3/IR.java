@@ -8,6 +8,7 @@
 // 
 // Extended with support for X86 Code generation
 //
+
 import java.util.*;
 
 class IR {
@@ -87,7 +88,9 @@ class IR {
         return false;
     }
 
-    /** Calculate (non-binding) preferences for register assignments. */
+    /**
+     * Calculate (non-binding) preferences for register assignments.
+     */
     static Map<IR.Reg, X86.Reg> getPreferences(IR.Func func) {
         Map<IR.Reg, X86.Reg> preferences = new HashMap<IR.Reg, X86.Reg>();
 
@@ -214,7 +217,8 @@ class IR {
         void addTo(Set<Reg> s);
     }
 
-    public interface Reg {}
+    public interface Reg {
+    }
 
     public interface Src extends Operand {
         /**
@@ -228,9 +232,11 @@ class IR {
     }
 
     public interface Dest extends Operand, Reg {
-        /** Generate a destination operand of the specified size.
-         Returns null if dest wasn't given a location or if we are
-         outside its live range; either way, it is dead at this point. **/
+        /**
+         * Generate a destination operand of the specified size.
+         * Returns null if dest wasn't given a location or if we are
+         * outside its live range; either way, it is dead at this point. *
+         */
         X86.Reg gen_dest_operand();
     }
 
@@ -425,13 +431,13 @@ class IR {
             }
             new X86.ParallelMover(n, src, dst, tempReg1).move();
             for (int i = 0; i < code.length; i++) {
-                
+
             }
 
             // emit code for the body (note that irPtr is global)
             for (irPtr = 0; irPtr < code.length; irPtr++) {
                 System.out.print("    # " + code[irPtr]);
-                
+
                 // START
                 if (code[irPtr] instanceof Binop) {
                     if (((Binop) code[irPtr]).src1 instanceof IR.Reg
@@ -445,19 +451,18 @@ class IR {
                             && (code[irPtr + 1] instanceof Binop)
                             && (code[irPtr + 2] instanceof Load)
                             || (code[irPtr + 2] instanceof Store)
-                            )
-                    {
+                            ) {
 
                         if (code[irPtr + 2] instanceof IR.Load) {
                             // Some array index k times a scalar
                             int offset = (env.get((Id) ((Binop) code[irPtr]).src1)).r * ((IntLit) ((Binop) code[irPtr]).src2).i;
                             // Some address plus an offset
-                            int notSureWhatImDoingHere = ((Id)((Binop)code[irPtr + 1]).src1).gen_dest_operand().r + offset;
-                            System.err.println(notSureWhatImDoingHere);
-                            IR.Addr source = new Addr(((Binop)code[irPtr + 1]).src1, offset);
+                            int notSureWhatImDoingHere = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand().r + offset;
+//                            System.err.println(notSureWhatImDoingHere);
+                            IR.Addr source = new Addr(((Binop) code[irPtr + 1]).src1, offset);
                             IR.Dest dest = ((Load) code[irPtr + 2]).dst;
                             IR.Type type = ((Load) code[irPtr + 2]).type;
-                            X86.Reg base = ((Id) ((Binop)code[irPtr + 1]).src1).gen_dest_operand();
+                            X86.Reg base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
                             X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
                             int size = ((env.get((Id) ((Binop) code[irPtr]).src1)).s).bytes;
                             X86.Mem anotherThing = new X86.Mem(base, index, offset, size);
@@ -1043,32 +1048,53 @@ class IR {
         Set<Reg> used() {
             return new HashSet<Reg>();
         }
+
         Set<Reg> defined() {
             return new HashSet<Reg>();
         }
     }
 
     public static class Label {
-        static int labelnum=0;
+        static int labelnum = 0;
         public String name;
 
-        public Label() { name = "L" + labelnum++; }
-        public Label(String s) { name = s; }
-        public void set(String s) { name = s; }
-        public String toString() { return name; }
+        public Label() {
+            name = "L" + labelnum++;
+        }
+
+        public Label(String s) {
+            name = s;
+        }
+
+        public void set(String s) {
+            name = s;
+        }
+
+        public String toString() {
+            return name;
+        }
     }
 
     public static class Addr {   // Memory at base + offset
         public final Src base;
         public final int offset;
 
-        public Addr(Src b) { base=b; offset=0; }
-        public Addr(Src b, int o) { base=b; offset=o; }
+        public Addr(Src b) {
+            base = b;
+            offset = 0;
+        }
+
+        public Addr(Src b, int o) {
+            base = b;
+            offset = o;
+        }
+
         public String toString() {
             return "" + ((offset == 0) ? "" : offset) + "[" + base + "]";
         }
+
         X86.Operand gen_addr_operand(X86.Reg temp) {
-            X86.Operand xbase = base.gen_source_operand(false,temp);
+            X86.Operand xbase = base.gen_source_operand(false, temp);
             assert (xbase instanceof X86.Reg);
             return new X86.Mem((X86.Reg) xbase, offset);
         }
@@ -1110,18 +1136,34 @@ class IR {
         }
     }
 
-    public static class Temp implements Reg, Src, Dest, CallTgt  {
-        private static int cnt=0;
+    public static class Temp implements Reg, Src, Dest, CallTgt {
+        private static int cnt = 0;
         public final int num;
 
-        public Temp(int n) { num=n; }
-        public Temp() { num = ++Temp.cnt; }
-        public static void reset() { Temp.cnt = 0; }
-        public static int getcnt() { return Temp.cnt; }
-        public String toString() { return "t" + num; }
+        public Temp(int n) {
+            num = n;
+        }
+
+        public Temp() {
+            num = ++Temp.cnt;
+        }
+
+        public static void reset() {
+            Temp.cnt = 0;
+        }
+
+        public static int getcnt() {
+            return Temp.cnt;
+        }
+
+        public String toString() {
+            return "t" + num;
+        }
+
         public boolean equals(Object l) {
             return (l instanceof Temp && (((Temp) l).num == num));
         }
+
         public int hashCode() {
             return num;
         }
@@ -1131,11 +1173,13 @@ class IR {
             assert (mrand != null); // dead value surely isn't used as a source
             return mrand;
         }
+
         public X86.Reg gen_dest_operand() {
             if (!liveOutSets.get(irPtr).contains(this))
                 return null;
             return env.get(this);
         }
+
         public void addTo(Set<Reg> s) {
             s.add(this);
         }
@@ -1158,9 +1202,10 @@ class IR {
 
         public X86.Operand gen_source_operand(boolean imm_ok, X86.Reg temp) {
             X86.AddrName mrand = new X86.AddrName(toString());
-            X86.emit2("leaq", mrand,temp);
+            X86.emit2("leaq", mrand, temp);
             return temp;
         }
+
         public void addTo(Set<Reg> s) {
         }
     }
@@ -1236,9 +1281,10 @@ class IR {
         public X86.Operand gen_source_operand(boolean imm_ok, X86.Reg temp) {
             X86.AddrName mrand = new X86.AddrName("_S" + stringLiterals.size());
             stringLiterals.add(s);
-            X86.emit2("leaq", mrand,temp);
+            X86.emit2("leaq", mrand, temp);
             return temp;
         }
+
         public void addTo(Set<Reg> s) {
         }
     }
