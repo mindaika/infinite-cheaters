@@ -429,9 +429,11 @@ class IR {
                 }
             }
             new X86.ParallelMover(n, src, dst, tempReg1).move();
-            for (int i = 0; i < code.length; i++) {
 
-            }
+            /*for (int i = 0; i < code.length; i++) {
+                I don't know where this came from,
+                but I'm leaving it in case it was supposed to be here.
+            }*/
 
             // emit code for the body (note that irPtr is global)
             for (irPtr = 0; irPtr < code.length; irPtr++) {
@@ -449,25 +451,23 @@ class IR {
                             && (code[irPtr + 2] instanceof Load)
                             || (code[irPtr + 2] instanceof Store)
                             ) {
-
                         if (code[irPtr + 2] instanceof IR.Load) {
                             // Some array index k times a scalar
-//                            int offset = (env.get((Id) ((Binop) code[irPtr]).src1)).s.bytes * ((IntLit) ((Binop) code[irPtr]).src2).i;
+
                             // Some address plus an offset
                             X86.Reg base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
                             X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
-                            X86.Mem anotherThing = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            X86.Mem memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
 
                             irPtr = irPtr + 2;
                             System.out.print("    # " + code[irPtr]);
-                            X86.emit2("movslq", anotherThing, ((Load) code[irPtr]).dst.gen_dest_operand());
+                            X86.emit2("movslq", memCall, ((Load) code[irPtr]).dst.gen_dest_operand());
 //                            code[irPtr].gen();
 
                         } else {
                             System.out.print("    # " + code[irPtr]);
                             code[irPtr].gen();
                         }
-
                     } else {
                         System.out.print("    # " + code[irPtr]);
                         code[irPtr].gen();
