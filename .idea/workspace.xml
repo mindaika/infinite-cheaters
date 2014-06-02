@@ -5,14 +5,8 @@
     <option name="CUSTOM_SCOPE_NAME" value="Open Files" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b6d9a59-e205-435f-a676-a1faff6c17f7" name="Default" comment="I, uh... think the Load works.">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/Graph.java" afterPath="$PROJECT_DIR$/hw3/Graph.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/IR.java" afterPath="$PROJECT_DIR$/hw3/IR.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/Liveness.java" afterPath="$PROJECT_DIR$/hw3/Liveness.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/X86.java" afterPath="$PROJECT_DIR$/hw3/X86.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/X86Gen.java" afterPath="$PROJECT_DIR$/hw3/X86Gen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/irParser.jj" afterPath="$PROJECT_DIR$/hw3/irParser.jj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/lib.c" afterPath="$PROJECT_DIR$/hw3/lib.c" />
+    <list default="true" id="5b6d9a59-e205-435f-a676-a1faff6c17f7" name="Default" comment="Readme. READ ME!">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hw3/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="CS322.iws" />
@@ -773,7 +767,11 @@
       <created>1401737896999</created>
       <updated>1401737896999</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Readme. READ ME!">
+      <created>1401739670435</created>
+      <updated>1401739670435</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -887,7 +885,8 @@
     <MESSAGE value="Middle-ish point&#10;" />
     <MESSAGE value="Test commit" />
     <MESSAGE value="I, uh... think the Load works." />
-    <option name="LAST_COMMIT_MESSAGE" value="I, uh... think the Load works." />
+    <MESSAGE value="Readme. READ ME!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Readme. READ ME!" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -1278,52 +1277,22 @@
         <state vertical-scroll-proportion="0.33256352" vertical-offset="26" max-vertical-offset="4726">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding>
-            <element signature="e#524#525#0" expanded="true" />
-            <element signature="e#551#552#0" expanded="true" />
-            <element signature="e#2143#2144#0" expanded="true" />
-            <element signature="e#2187#2188#0" expanded="true" />
-            <element signature="e#2227#2228#0" expanded="true" />
-            <element signature="e#2312#2313#0" expanded="true" />
-            <element signature="e#2409#2410#0" expanded="true" />
-            <element signature="e#2433#2434#0" expanded="true" />
-            <element signature="e#2464#2465#0" expanded="true" />
-            <element signature="e#2492#2493#0" expanded="true" />
-            <element signature="e#2532#2533#0" expanded="true" />
-            <element signature="e#2593#2594#0" expanded="true" />
-            <element signature="e#2708#2709#0" expanded="true" />
-            <element signature="e#2732#2733#0" expanded="true" />
-            <element signature="e#2763#2764#0" expanded="true" />
-            <element signature="e#2807#2808#0" expanded="true" />
-            <element signature="e#2847#2848#0" expanded="true" />
-            <element signature="e#2918#2919#0" expanded="true" />
-            <element signature="e#3015#3016#0" expanded="true" />
-            <element signature="e#3039#3040#0" expanded="true" />
-            <element signature="e#3070#3071#0" expanded="true" />
-            <element signature="e#3103#3104#0" expanded="true" />
-            <element signature="e#3143#3144#0" expanded="true" />
-            <element signature="e#3210#3211#0" expanded="true" />
-            <element signature="e#3304#3305#0" expanded="true" />
-            <element signature="e#3328#3329#0" expanded="true" />
-            <element signature="e#3359#3360#0" expanded="true" />
-            <element signature="e#3381#3382#0" expanded="true" />
-            <element signature="e#3421#3422#0" expanded="true" />
-            <element signature="e#3486#3487#0" expanded="true" />
-            <element signature="e#3525#3526#0" expanded="true" />
-            <element signature="e#3556#3557#0" expanded="true" />
-            <element signature="e#3592#3593#0" expanded="true" />
-            <element signature="e#3631#3632#0" expanded="true" />
-            <element signature="e#3682#3683#0" expanded="true" />
-            <element signature="e#3735#3736#0" expanded="true" />
-            <element signature="e#3906#3907#0" expanded="true" />
-            <element signature="e#3945#3946#0" expanded="true" />
-            <element signature="e#3987#3988#0" expanded="true" />
-            <element signature="e#4026#4027#0" expanded="true" />
-            <element signature="e#4064#4065#0" expanded="true" />
-            <element signature="e#4118#4119#0" expanded="true" />
-            <element signature="e#4203#4204#0" expanded="true" />
-            <element signature="e#4237#4238#0" expanded="true" />
-            <element signature="e#6794#6795#0" expanded="true" />
-            <element signature="e#6831#6832#0" expanded="true" />
+            <element signature="e#2105#2106#0" expanded="false" />
+            <element signature="e#2142#2143#0" expanded="false" />
+            <element signature="e#2178#2179#0" expanded="false" />
+            <element signature="e#2223#2224#0" expanded="false" />
+            <element signature="e#2274#2275#0" expanded="false" />
+            <element signature="e#2333#2334#0" expanded="false" />
+            <element signature="e#2512#2513#0" expanded="false" />
+            <element signature="e#2557#2558#0" expanded="false" />
+            <element signature="e#2599#2600#0" expanded="false" />
+            <element signature="e#2644#2645#0" expanded="false" />
+            <element signature="e#2684#2685#0" expanded="false" />
+            <element signature="e#2744#2745#0" expanded="false" />
+            <element signature="e#2830#2831#0" expanded="false" />
+            <element signature="e#2871#2872#0" expanded="false" />
+            <element signature="e#3173#3174#0" expanded="false" />
+            <element signature="e#3218#3219#0" expanded="false" />
           </folding>
         </state>
       </provider>
