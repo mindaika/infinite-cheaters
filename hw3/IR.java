@@ -463,14 +463,19 @@ class IR {
                             System.out.print("    # " + code[irPtr]);
                             X86.emit2("movslq", memCall, ((Load) code[irPtr]).dst.gen_dest_operand());
 
-                        /*} else if (code[irPtr + 2] instanceof IR.Store) {
+                        } else if (code[irPtr + 2] instanceof IR.Store) {
                             X86.Reg base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
                             X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
                             X86.Mem memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            System.out.print("    # " + code[irPtr]);
+                            System.out.print("    # " + code[irPtr + 1]);
                             irPtr = irPtr + 2;
-                            System.out.print("    # " + code[irPtr] + "STORE");
-                            ((Store) code[irPtr]).src.gen_source_operand(true, tempReg1);
-                            X86.emit2("movl", ((Store) code[irPtr]).addr.gen_addr_operand(tempReg1), memCall.base);*/
+                            System.out.print("    # " + code[irPtr]);
+
+                            X86.Operand s = ((Store) code[irPtr]).src.gen_source_operand(true, tempReg1);
+                            if (s instanceof X86.Reg)
+                                s = X86.resize_reg(((Store) code[irPtr]).type.X86_size, (X86.Reg) s);
+                            X86.emitMov(((Store) code[irPtr]).type.X86_size, s, memCall);
                         } else {
                             System.out.print("    # " + code[irPtr]);
                             code[irPtr].gen();

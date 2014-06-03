@@ -8,4 +8,4 @@ After flailing around the code for a couple days (weeks), I moved my code to the
 
 The actual improvement of the Load is relatively simple, once I figured it out: Create a new Mem call with the base (A in the example), the index (j) and the offset (4 * j) and call the emit2 function with the new memCall and the Load destination register, then increment the pointer to skip the unused instructions. 
 
-Based on the wording of the instructions, and a conversation with Prof Jones, it appears we may not need to handle the IR.Store condition.
+For Store, I essentially recycled the code from IR.Store and the rewritten code from above. We apparently also need to check the register size before moving. 
