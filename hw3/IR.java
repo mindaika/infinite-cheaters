@@ -442,6 +442,7 @@ class IR {
                     if ((((Binop) code[irPtr]).src1 instanceof IR.Reg
                             || ((Binop) code[irPtr]).src1 instanceof IntLit)
                             && ((Binop) code[irPtr]).src2 instanceof IntLit
+                            && ((((Binop) code[irPtr]).op).toString().equals("MUL"))
                             && ((((IntLit) ((Binop) code[irPtr]).src2).i == 1
                             || ((IntLit) ((Binop) code[irPtr]).src2).i == 2
                             || ((IntLit) ((Binop) code[irPtr]).src2).i == 4
@@ -452,60 +453,38 @@ class IR {
                             && ((code[irPtr + 2] instanceof Load)
                             || (code[irPtr + 2] instanceof Store))
                             ) {
-                        if (code[irPtr + 2] instanceof IR.Load) {
+                        X86.Operand memCall;
+                        X86.Reg base;
+                        if (((Binop) code[irPtr + 1]).src1 instanceof Temp) {
+                            base = ((Temp) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
+                        } else {
+                            base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
+                        }//
+                        if (((Binop) code[irPtr]).src1 instanceof IR.Id) {
+                            X86.Reg index = env.get(((Binop) code[irPtr]).src1);
+                            memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                        } else if (((Binop) code[irPtr]).src1 instanceof IR.IntLit) {
+                            memCall = new X86.Mem(base, 0);
+                        } else { //IR.Temp
+                            X86.Reg index = env.get((Temp) ((Binop) code[irPtr]).src1);
+                            memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                        }
+                        System.out.print("    # " + code[irPtr]);
+                        System.out.print("    # " + code[irPtr + 1]);
+                        irPtr = irPtr + 2;
+                        System.out.print("    # " + code[irPtr]);
+                        if (code[irPtr] instanceof IR.Load) {
                             // Some array index k times a scalar
                             // Some address plus an offset
-                            X86.Operand memCall;
-                            X86.Reg base;
-                            if (((Binop) code[irPtr + 1]).src1 instanceof Temp) {
-                                base = ((Temp) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
-                            } else {
-                                base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
-                            }
-                            if (((Binop) code[irPtr]).src1 instanceof IR.Id) {
-                                X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
-                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
-                            } else if (((Binop) code[irPtr]).src1 instanceof IR.IntLit) {
-                                memCall = new X86.Mem(base, 0);
-                            } else { //IR.Temp
-                                X86.Reg index = env.get((Temp) ((Binop) code[irPtr]).src1);
-                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
-                            }
-                            System.out.print("    # " + code[irPtr]);
-                            System.out.print("    # " + code[irPtr + 1]);
-                            irPtr = irPtr + 2;
-                            System.out.print("    # " + code[irPtr]);
                             X86.emit2("movslq", memCall, ((Load) code[irPtr]).dst.gen_dest_operand());
-
-                        } else if (code[irPtr + 2] instanceof IR.Store) {
-                            X86.Reg base;
-                            if (((Binop) code[irPtr + 1]).src1 instanceof Temp) {
-                                base = ((Temp) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
-                            } else {
-                                base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
-                            }
-                            X86.Operand memCall;
-                            if (((Binop) code[irPtr]).src1 instanceof IR.Id) {
-                                X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
-                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
-                            } else if (((Binop) code[irPtr]).src1 instanceof IR.IntLit) {
-                                memCall = new X86.Mem(base, 0);
-                            } else { //IR.Temp
-                                X86.Reg index = env.get((Temp) ((Binop) code[irPtr]).src1);
-                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
-                            }
-                            System.out.print("    # " + code[irPtr]);
-                            System.out.print("    # " + code[irPtr + 1]);
-                            irPtr = irPtr + 2;
-                            System.out.print("    # " + code[irPtr]);
-
+                        } else /*if (code[irPtr] instanceof IR.Store)*/ {
                             X86.Operand s = ((Store) code[irPtr]).src.gen_source_operand(true, tempReg1);
+//                            System.out.println("base = " + base.toString());
+//                            System.out.println("s = " + s.toString());
+//                            System.out.println("memCall = " + memCall.toString());
                             if (s instanceof X86.Reg)
                                 s = X86.resize_reg(((Store) code[irPtr]).type.X86_size, (X86.Reg) s);
                             X86.emitMov(((Store) code[irPtr]).type.X86_size, s, memCall);
-                        } else {
-                            System.out.print("    # " + code[irPtr]);
-                            code[irPtr].gen();
                         }
                     } else {
                         System.out.print("    # " + code[irPtr]);
