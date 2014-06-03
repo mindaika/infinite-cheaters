@@ -439,7 +439,8 @@ class IR {
             for (irPtr = 0; irPtr < code.length; irPtr++) {
                 // START
                 if (code[irPtr] instanceof Binop) {
-                    if (((Binop) code[irPtr]).src1 instanceof IR.Reg
+                    if ((((Binop) code[irPtr]).src1 instanceof IR.Reg
+                            || ((Binop) code[irPtr]).src1 instanceof IntLit)
                             && ((Binop) code[irPtr]).src2 instanceof IntLit
                             && ((((IntLit) ((Binop) code[irPtr]).src2).i == 1
                             || ((IntLit) ((Binop) code[irPtr]).src2).i == 2
@@ -448,15 +449,28 @@ class IR {
                     ))
                             && (code[irPtr + 2] != null) // If no i+2, no i+1, so no need to check i+1
                             && (code[irPtr + 1] instanceof Binop)
-                            && (code[irPtr + 2] instanceof Load)
-                            || (code[irPtr + 2] instanceof Store)
+                            && ((code[irPtr + 2] instanceof Load)
+                            || (code[irPtr + 2] instanceof Store))
                             ) {
                         if (code[irPtr + 2] instanceof IR.Load) {
                             // Some array index k times a scalar
                             // Some address plus an offset
-                            X86.Reg base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
-                            X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
-                            X86.Mem memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            X86.Operand memCall;
+                            X86.Reg base;
+                            if (((Binop) code[irPtr + 1]).src1 instanceof Temp) {
+                                base = ((Temp) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
+                            } else {
+                                base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
+                            }
+                            if (((Binop) code[irPtr]).src1 instanceof IR.Id) {
+                                X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
+                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            } else if (((Binop) code[irPtr]).src1 instanceof IR.IntLit) {
+                                memCall = new X86.Mem(base, 0);
+                            } else { //IR.Temp
+                                X86.Reg index = env.get((Temp) ((Binop) code[irPtr]).src1);
+                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            }
                             System.out.print("    # " + code[irPtr]);
                             System.out.print("    # " + code[irPtr + 1]);
                             irPtr = irPtr + 2;
@@ -464,9 +478,22 @@ class IR {
                             X86.emit2("movslq", memCall, ((Load) code[irPtr]).dst.gen_dest_operand());
 
                         } else if (code[irPtr + 2] instanceof IR.Store) {
-                            X86.Reg base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
-                            X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
-                            X86.Mem memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            X86.Reg base;
+                            if (((Binop) code[irPtr + 1]).src1 instanceof Temp) {
+                                base = ((Temp) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
+                            } else {
+                                base = ((Id) ((Binop) code[irPtr + 1]).src1).gen_dest_operand();
+                            }
+                            X86.Operand memCall;
+                            if (((Binop) code[irPtr]).src1 instanceof IR.Id) {
+                                X86.Reg index = env.get((Id) ((Binop) code[irPtr]).src1);
+                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            } else if (((Binop) code[irPtr]).src1 instanceof IR.IntLit) {
+                                memCall = new X86.Mem(base, 0);
+                            } else { //IR.Temp
+                                X86.Reg index = env.get((Temp) ((Binop) code[irPtr]).src1);
+                                memCall = new X86.Mem(base, index, 0, ((IntLit) ((Binop) code[irPtr]).src2).i);
+                            }
                             System.out.print("    # " + code[irPtr]);
                             System.out.print("    # " + code[irPtr + 1]);
                             irPtr = irPtr + 2;
@@ -479,7 +506,6 @@ class IR {
                         } else {
                             System.out.print("    # " + code[irPtr]);
                             code[irPtr].gen();
-
                         }
                     } else {
                         System.out.print("    # " + code[irPtr]);
@@ -491,7 +517,6 @@ class IR {
                     code[irPtr].gen();
                 }
             }
-
         }
 
         // Return set of successors for each instruction in a function
