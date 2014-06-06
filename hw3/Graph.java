@@ -4,9 +4,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Randall on 5/25/2014.
+ * Created by Randall Sewell
+ * for CS322 on 5/25/2014.
  */
-public class Graph {
+class Graph {
     private Map<IR.Reg, Set<IR.Reg>> undirectedGraph;
 
     public Graph() {
@@ -36,11 +37,11 @@ public class Graph {
         }
     }
 
-    public void addNode(IR.Reg node) {
+    void addNode(IR.Reg node) {
         undirectedGraph.put(node, new HashSet<IR.Reg>());
     }
 
-    public void addEdge(IR.Reg node, IR.Reg neighbor) {
+    void addEdge(IR.Reg node, IR.Reg neighbor) {
         undirectedGraph.get(node).add(neighbor);
     }
 

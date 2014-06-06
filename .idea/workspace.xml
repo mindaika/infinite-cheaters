@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="8" />
+    <option name="CUSTOM_SCOPE_NAME" value="Open Files" />
+  </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="5b6d9a59-e205-435f-a676-a1faff6c17f7" name="Default" comment="More various things&#10;">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/IR.java" afterPath="$PROJECT_DIR$/hw3/IR.java" />
+=======
+    <list default="true" id="5b6d9a59-e205-435f-a676-a1faff6c17f7" name="Default" comment="Needs bugchecked for some spurious output.">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw3/IR.java" afterPath="$PROJECT_DIR$/hw3/IR.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
     </list>
     <ignored path="CS322.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,18 +78,31 @@
       <file leaf-file-name="Assignment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hw3/Assignment.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state vertical-scroll-proportion="0.0" vertical-offset="941" max-vertical-offset="3009">
               <caret line="70" column="13" selection-start-line="70" selection-start-column="13" selection-end-line="70" selection-end-column="13" />
+=======
+            <state vertical-scroll-proportion="0.0" vertical-offset="2576" max-vertical-offset="3009">
+              <caret line="161" column="19" selection-start-line="161" selection-start-column="19" selection-end-line="161" selection-end-column="19" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="X86Gen.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hw3/X86Gen.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="510">
               <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+=======
+      <file leaf-file-name="Graph.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw3/Graph.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="1564">
+              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
               <folding />
             </state>
           </provider>
@@ -88,10 +111,39 @@
       <file leaf-file-name="IR.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw3/IR.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state vertical-scroll-proportion="0.7084871" vertical-offset="7181" max-vertical-offset="19584">
               <caret line="463" column="0" selection-start-line="463" selection-start-column="0" selection-end-line="463" selection-end-column="0" />
               <folding>
                 <element signature="e#0#40830#0" expanded="true" />
+              </folding>
+=======
+            <state vertical-scroll-proportion="-5.285714" vertical-offset="3371" max-vertical-offset="4301">
+              <caret line="253" column="21" selection-start-line="253" selection-start-column="20" selection-end-line="253" selection-end-column="21" />
+              <folding />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IR.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/hw3/IR.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.40415704" vertical-offset="4415" max-vertical-offset="17255">
+              <caret line="469" column="61" selection-start-line="469" selection-start-column="56" selection-end-line="469" selection-end-column="61" />
+              <folding>
+                <element signature="e#0#42483#0" expanded="true" />
+                <element signature="method#liveOver#0;class#IR#0" expanded="false" />
+                <element signature="method#getPreferences#0;class#IR#0" expanded="false" />
+                <element signature="class#Type#0;class#IR#0" expanded="false" />
+                <element signature="class#RelOP#0;class#IR#0" expanded="false" />
+                <element signature="class#UOP#0;class#IR#0" expanded="false" />
+                <element signature="class#Src#0;class#IR#0" expanded="false" />
+                <element signature="class#Dest#0;class#IR#0" expanded="false" />
+                <element signature="class#CallTgt#0;class#IR#0" expanded="false" />
+                <element signature="class#Const#0;class#IR#0" expanded="false" />
+                <element signature="class#Program#0;class#IR#0" expanded="false" />
+                <element signature="class#Data#0;class#IR#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -121,8 +173,8 @@
         <option value="$PROJECT_DIR$/hw3/In.java" />
         <option value="$PROJECT_DIR$/hw3/myGraph.java" />
         <option value="$PROJECT_DIR$/hw3/MyGraph.java" />
-        <option value="$PROJECT_DIR$/hw3/Graph.java" />
         <option value="$PROJECT_DIR$/hw3/Assignment.java" />
+        <option value="$PROJECT_DIR$/hw3/Graph.java" />
         <option value="$PROJECT_DIR$/hw3/IR.java" />
       </list>
     </option>
@@ -133,7 +185,7 @@
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -157,7 +209,7 @@
     </ignored-problems>
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -168,6 +220,7 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
+<<<<<<< HEAD
     <panes>
       <pane id="Scope" />
       <pane id="PackagesPane">
@@ -215,6 +268,9 @@
         </subPane>
       </pane>
     </panes>
+=======
+    <panes />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
@@ -223,7 +279,7 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="options.lastSelected" value="Template Data Languages" />
+    <property name="options.lastSelected" value="diff" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -380,7 +436,11 @@
     <configuration default="false" name="HW3" type="Application" factoryName="Application" singleton="true">
       <option name="MAIN_CLASS_NAME" value="X86Gen" />
       <option name="VM_PARAMETERS" value="-ea" />
+<<<<<<< HEAD
       <option name="PROGRAM_PARAMETERS" value="F:\Projects\infinite-cheaters\tstHW3\test38.ir" />
+=======
+      <option name="PROGRAM_PARAMETERS" value="C:\Projects\infinite-cheaters\tstHW3\test19.ir" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -500,6 +560,7 @@
       <created>1401294714158</created>
       <updated>1401294714158</updated>
     </task>
+<<<<<<< HEAD
     <task id="LOCAL-00021" summary="Local changes. &#10;">
       <created>1401578200185</created>
       <updated>1401578200185</updated>
@@ -509,6 +570,49 @@
       <updated>1401639548183</updated>
     </task>
     <option name="localTasksCounter" value="23" />
+=======
+    <task id="LOCAL-00021" summary="Middle-ish point&#10;">
+      <created>1401551981358</created>
+      <updated>1401551981358</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Test commit">
+      <created>1401726536650</created>
+      <updated>1401726536651</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Test commit">
+      <created>1401727230598</created>
+      <updated>1401727230598</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Test commit">
+      <created>1401729150932</created>
+      <updated>1401729150932</updated>
+    </task>
+    <task id="LOCAL-00025" summary="I, uh... think the Load works.">
+      <created>1401737896999</created>
+      <updated>1401737896999</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Readme. READ ME!">
+      <created>1401739670435</created>
+      <updated>1401739670435</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Readme. READ ME!">
+      <created>1401739755978</created>
+      <updated>1401739755978</updated>
+    </task>
+    <task id="LOCAL-00028" summary="This looks like it may be the end of the road...">
+      <created>1401749331086</created>
+      <updated>1401749331086</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Ha, wrong! This is maybe possibly more like the end o' the road.">
+      <created>1401758040997</created>
+      <updated>1401758040997</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Needs bugchecked for some spurious output.">
+      <created>1401766430370</created>
+      <updated>1401766430370</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -532,8 +636,13 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
+<<<<<<< HEAD
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
+=======
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="false" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985657" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -541,15 +650,24 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39809927" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39809927" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+=======
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39895698" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3285528" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3285528" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3285528" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25052083" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19895834" sideWeight="0.49800798" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.344245" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -557,6 +675,14 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3285528" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284055" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+=======
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.49800798" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34550196" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3285528" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39895698" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
     <layout-to-restore>
@@ -597,10 +723,10 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Minor changes" />
     <MESSAGE value="More changes; some useful, some not." />
     <MESSAGE value="Mods to cons." />
     <MESSAGE value="It's not nothing, but it's not everythig." />
@@ -619,9 +745,20 @@
     <MESSAGE value="Trying to fix MyGraph&#10;" />
     <MESSAGE value="More cleanup&#10;&#10;" />
     <MESSAGE value="Moved some of the Graph construction to the correct place: the Graph class." />
+<<<<<<< HEAD
     <MESSAGE value="Local changes. &#10;" />
     <MESSAGE value="More various things&#10;" />
     <option name="LAST_COMMIT_MESSAGE" value="More various things&#10;" />
+=======
+    <MESSAGE value="Middle-ish point&#10;" />
+    <MESSAGE value="Test commit" />
+    <MESSAGE value="I, uh... think the Load works." />
+    <MESSAGE value="Readme. READ ME!" />
+    <MESSAGE value="This looks like it may be the end of the road..." />
+    <MESSAGE value="Ha, wrong! This is maybe possibly more like the end o' the road." />
+    <MESSAGE value="Needs bugchecked for some spurious output." />
+    <option name="LAST_COMMIT_MESSAGE" value="Needs bugchecked for some spurious output." />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -678,7 +815,11 @@
           <option name="timeStamp" value="243" />
         </line-breakpoint>
       </breakpoints>
+<<<<<<< HEAD
       <option name="time" value="246" />
+=======
+      <option name="time" value="230" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -686,6 +827,7 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/hw3/Assignment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3009">
@@ -699,6 +841,26 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="510">
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
+=======
+    <entry file="file://$PROJECT_DIR$/hw3/IR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2636" max-vertical-offset="16966">
+          <caret line="476" column="66" selection-start-line="476" selection-start-column="66" selection-end-line="476" selection-end-column="66" />
+          <folding>
+            <element signature="e#0#42483#0" expanded="true" />
+            <element signature="method#liveOver#0;class#IR#0" expanded="false" />
+            <element signature="method#getPreferences#0;class#IR#0" expanded="false" />
+            <element signature="class#Type#0;class#IR#0" expanded="false" />
+            <element signature="class#RelOP#0;class#IR#0" expanded="false" />
+            <element signature="class#UOP#0;class#IR#0" expanded="false" />
+            <element signature="class#Src#0;class#IR#0" expanded="false" />
+            <element signature="class#Dest#0;class#IR#0" expanded="false" />
+            <element signature="class#CallTgt#0;class#IR#0" expanded="false" />
+            <element signature="class#Const#0;class#IR#0" expanded="false" />
+            <element signature="class#Program#0;class#IR#0" expanded="false" />
+            <element signature="class#Data#0;class#IR#0" expanded="false" />
+          </folding>
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
         </state>
       </provider>
     </entry>
@@ -929,6 +1091,38 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="5626" max-vertical-offset="7259">
           <caret line="442" column="40" selection-start-line="442" selection-start-column="40" selection-end-line="442" selection-end-column="40" />
+<<<<<<< HEAD
+=======
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2889" max-vertical-offset="3808">
+          <caret line="204" column="11" selection-start-line="195" selection-start-column="6" selection-end-line="204" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tstHW3/test48.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="442">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tst/test03.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.046008117" vertical-offset="0" max-vertical-offset="739">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/src/MainDT.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="731">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
         </state>
       </provider>
     </entry>
@@ -939,6 +1133,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/hw3/Graph.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.39873418" vertical-offset="886" max-vertical-offset="1360">
@@ -946,6 +1141,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
     <entry file="file://$PROJECT_DIR$/hw3/irParserTokenManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="10149" max-vertical-offset="12495">
@@ -971,11 +1168,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3780" max-vertical-offset="5338">
           <caret line="116" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="135" selection-end-column="20" />
+<<<<<<< HEAD
+=======
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw3/Assignment.java">
+    <entry file="file://$PROJECT_DIR$/hw2/ir/irParser.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="744" max-vertical-offset="19618">
+          <caret line="53" column="10" selection-start-line="53" selection-start-column="10" selection-end-line="53" selection-end-column="10" />
+          <folding />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw3/X86Gen.java">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state vertical-scroll-proportion="0.0" vertical-offset="992" max-vertical-offset="3009">
           <caret line="70" column="13" selection-start-line="70" selection-start-column="13" selection-end-line="70" selection-end-column="13" />
           <folding />
@@ -987,27 +1196,76 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="493">
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
+=======
+        <state vertical-scroll-proportion="0.3487298" vertical-offset="36" max-vertical-offset="510">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw3/Assignment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2576" max-vertical-offset="3009">
+          <caret line="161" column="19" selection-start-line="161" selection-start-column="19" selection-end-line="161" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw3/Graph.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="765" max-vertical-offset="1377">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hw3/X86.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state vertical-scroll-proportion="0.0" vertical-offset="952" max-vertical-offset="4743">
           <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+=======
+        <state vertical-scroll-proportion="-5.285714" vertical-offset="3371" max-vertical-offset="4301">
+          <caret line="253" column="21" selection-start-line="253" selection-start-column="20" selection-end-line="253" selection-end-column="21" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hw3/IR.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state vertical-scroll-proportion="0.7084871" vertical-offset="7181" max-vertical-offset="19584">
           <caret line="463" column="0" selection-start-line="463" selection-start-column="0" selection-end-line="463" selection-end-column="0" />
           <folding>
             <element signature="e#0#40830#0" expanded="true" />
+=======
+        <state vertical-scroll-proportion="0.40415704" vertical-offset="4415" max-vertical-offset="17255">
+          <caret line="469" column="61" selection-start-line="469" selection-start-column="56" selection-end-line="469" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#42483#0" expanded="true" />
+            <element signature="method#liveOver#0;class#IR#0" expanded="false" />
+            <element signature="method#getPreferences#0;class#IR#0" expanded="false" />
+            <element signature="class#Type#0;class#IR#0" expanded="false" />
+            <element signature="class#RelOP#0;class#IR#0" expanded="false" />
+            <element signature="class#UOP#0;class#IR#0" expanded="false" />
+            <element signature="class#Src#0;class#IR#0" expanded="false" />
+            <element signature="class#Dest#0;class#IR#0" expanded="false" />
+            <element signature="class#CallTgt#0;class#IR#0" expanded="false" />
+            <element signature="class#Const#0;class#IR#0" expanded="false" />
+            <element signature="class#Program#0;class#IR#0" expanded="false" />
+            <element signature="class#Data#0;class#IR#0" expanded="false" />
+>>>>>>> c473aeef399722dae5de94d9744cb061ee6a4c85
           </folding>
         </state>
       </provider>
     </entry>
+  </component>
+  <component name="hg4idea.settings">
+    <option name="CHECK_INCOMING_OUTGOING" value="false" />
   </component>
   <component name="masterDetails">
     <states>
