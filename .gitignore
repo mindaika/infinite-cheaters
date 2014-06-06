@@ -216,3 +216,7 @@ pip-log.txt
 
 #Java build files
 *.class
+*.xml
+*.xml
+.idea/workspace.xml
+.idea/workspace.xml
